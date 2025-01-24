@@ -7,21 +7,22 @@ const events = [
   {
     id: 1,
     title: "Hack To The Future",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/public/hacktofuture.avif",
+    
     tag: "IEEE SB MUJ",
     date: "2023-11-15",
   },
   {
     id: 2,
     title: "Campus Coders",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/public/campuscoders.avif",
     tag: "IEEE SB MUJ",
     date: "2023-11-20",
   },
   {
     id: 3,
     title: "21 Days Of Code 2.0",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/public/21daysodcode2.0.avif",
     tag: "IEEE SB MUJ",
     date: "2023-12-01",
   },

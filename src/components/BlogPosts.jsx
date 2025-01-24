@@ -9,7 +9,7 @@ const blogPosts = [
     title: "Computer Vision in Today's World",
     excerpt:
       "Computer Vision technology has been prevalent since the 1950s. But it was not until the boom in the field of AI and ML, this technology proved to have innumerable applications.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/public/computervision.webp",
     author: "Yash Pachchigar",
     date: "Aug 18, 2023",
     readTime: "5 min read",
@@ -19,7 +19,7 @@ const blogPosts = [
     title: "ARE ELECTRIC CARS HERE TO STAY?",
     excerpt:
       "With the global threats of termination of oils, technology gives a majority of its attention at finding alternatives to sustain the standard of living without any sort of compensation.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/public/electriccars.webp", 
     author: "Siya Mulge",
     date: "Aug 13, 2023",
     readTime: "4 min read",
@@ -29,7 +29,7 @@ const blogPosts = [
     title: "Netflix's Recommendation System using Machine Learning",
     excerpt:
       'How does Netflix know that you like Money Heist? And no, it\'s not the FBI spying on your "Bella Ciao" wall-poster.',
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/public/netflix.webp",
     author: "Aarohi Manchanda",
     date: "Aug 2, 2023",
     readTime: "6 min read",

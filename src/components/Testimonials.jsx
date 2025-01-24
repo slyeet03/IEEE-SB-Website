@@ -1,6 +1,8 @@
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ChevronLeft, ChevronRight } from "lucide-react";
+import Tilt from 'react-parallax-tilt'; 
 
 const testimonials = [
   {
@@ -9,7 +11,7 @@ const testimonials = [
       "IEEE has a special contribution in my journey from a first-year major student to a tech enthusiast. The immense exposure to everything in the Thinkies provided through IEEE MUJ has transformed everything. The opportunities provided by IEEE prompted me to give step further and serve on the Council for the betterment of students.",
     author: "Aayush Raj",
     position: "Technical Chapter Lead",
-    avatar: "/placeholder.svg?height=100&width=100",
+    avatar: "/aayush.avif",
   },
   {
     id: 2,
@@ -67,7 +69,15 @@ export default function Testimonials() {
               transition={{ duration: 0.5 }}
               className="max-w-3xl mx-auto"
             >
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+              <Tilt
+                className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 shadow-lg"
+                glareEnable={true}
+                glareMaxOpacity={0.3}
+                perspective={1000}
+                tiltMaxAngleX={2}
+                tiltMaxAngleY={2}
+                scale={1.05}
+              >
                 <div className="space-y-6">
                   <p className="text-gray-700 dark:text-gray-300 text-lg italic leading-relaxed">
                     &quot;{testimonials[currentIndex].content}&quot;
@@ -90,7 +100,7 @@ export default function Testimonials() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Tilt>
             </motion.div>
           </AnimatePresence>
 

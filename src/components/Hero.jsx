@@ -1,31 +1,20 @@
+
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import CircuitPattern from "./CircuitPattern";
 
 export default function Hero() {
   const [ref, inView] = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
+    threshold: 0.1, 
+    triggerOnce: true, 
   });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
+  const fadeInVariants = {
+    hidden: { opacity: 0, y: 50 }, 
     visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-      },
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 1, ease: "easeOut" },
     },
   };
 
@@ -35,13 +24,17 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
         <motion.div
           ref={ref}
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
+          initial="hidden" 
+          animate={inView ? "visible" : "hidden"} 
+          variants={fadeInVariants} 
           className="relative z-10 grid md:grid-cols-2 gap-12 items-center"
         >
           <div className="space-y-8">
-            <motion.div variants={itemVariants} className="space-y-4">
+            
+            <motion.div
+              variants={fadeInVariants} 
+              className="space-y-4"
+            >
               <h2 className="text-ieee-blue dark:text-blue-400 text-xl font-semibold font-display">
                 IEEE Student Branch MUJ
               </h2>
@@ -55,16 +48,18 @@ export default function Hero() {
               </h1>
             </motion.div>
 
+            
             <motion.p
-              variants={itemVariants}
+              variants={fadeInVariants}
               className="text-xl text-gray-600 dark:text-gray-300"
             >
               Join the world&apos;s largest technical professional organization and
               be part of the future of technology.
             </motion.p>
 
+            
             <motion.div
-              variants={itemVariants}
+              variants={fadeInVariants}
               className="flex flex-wrap gap-4"
             >
               <motion.button
@@ -84,31 +79,41 @@ export default function Hero() {
               </motion.button>
             </motion.div>
 
+            
             <motion.div
-              variants={itemVariants}
+              variants={fadeInVariants}
               className="flex items-center gap-4 text-gray-600 dark:text-gray-400"
             >
               <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 border-2 border-white dark:border-gray-900"
-                  />
+                {[
+                  "krishna.avif", 
+                  "garima.avif", 
+                  "yashgarg.avif", 
+                  "aayush.avif"
+                ].map((image, i) => (
+                  <div key={i} className="w-8 h-8 rounded-full overflow-hidden border-2 border-white dark:border-gray-900">
+                    <img
+                      src={`/${image}`} 
+                      alt={`Person ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 ))}
               </div>
               <p>Join 1000+ members in our community</p>
             </motion.div>
           </div>
 
+          
           <motion.div
-            variants={itemVariants}
+            variants={fadeInVariants}
             className="relative hidden md:block"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-ieee-blue/20 to-transparent rounded-full filter blur-3xl"></div>
             <img
-              src="/placeholder.svg?height=400&width=400"
-              alt="Technology Illustration"
-              className="relative z-10 w-full h-auto animate-float"
+              // src="/placeholder.svg?height=400&width=400"
+              // alt="Technology Illustration"
+              // className="relative z-10 w-full h-auto animate-float"
             />
           </motion.div>
         </motion.div>
