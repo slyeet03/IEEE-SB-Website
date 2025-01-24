@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-undef
-const colors = require("tailwindcss/colors")
+
+const colors = require("tailwindcss/colors");
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -8,8 +8,13 @@ const config = {
   theme: {
     extend: {
       colors: {
-        "ieee-blue": "#006699",
-        "ieee-dark": "#00101F",
+        "ieee-blue": {
+          DEFAULT: "#006699",
+          light: "#3399CC", 
+          dark: "#004466", 
+        },
+        "ieee-light": "#F3F4F6", 
+        "ieee-dark": "#00101F", 
         primary: colors.blue,
         secondary: colors.teal,
       },
@@ -17,37 +22,23 @@ const config = {
         sans: ["Inter", "sans-serif"],
         display: ["Poppins", "sans-serif"],
       },
-      animation: {
-        "circuit-flow": "circuit 3s linear infinite",
-        "fade-in-up": "fadeInUp 0.5s ease-out",
-        "fade-in": "fadeIn 0.5s ease-out",
+      backgroundImage: {
+        "gradient-glow":
+          "linear-gradient(90deg, rgba(51,153,204,1) 0%, rgba(0,102,153,1) 100%)",
       },
-      keyframes: {
-        circuit: {
-          "0%": { strokeDashoffset: "1000" },
-          "100%": { strokeDashoffset: "0" },
-        },
-        fadeInUp: {
-          "0%": { opacity: "0", transform: "translateY(10px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        fadeIn: {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
+      boxShadow: {
+        glow: "0 4px 20px rgba(51,153,204,0.5)", 
+      },
+      transitionProperty: {
+        theme: "background-color, color, border-color, text-decoration-color, fill, stroke",
       },
     },
   },
   plugins: [
-    // eslint-disable-next-line no-undef
     require("@tailwindcss/typography"),
-    // eslint-disable-next-line no-undef
     require("@tailwindcss/forms"),
-    // eslint-disable-next-line no-undef
     require("@tailwindcss/aspect-ratio"),
   ],
-}
+};
 
-// eslint-disable-next-line no-undef
-module.exports = config
-
+module.exports = config;

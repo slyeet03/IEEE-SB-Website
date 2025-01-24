@@ -6,6 +6,8 @@ import Events from "./components/Events";
 import Testimonials from "./components/Testimonials";
 import BlogPosts from "./components/BlogPosts";
 import Footer from "./components/Footer";
+import Societies from "./components/Societies"; 
+import Contact from "./components/Contact"; 
 
 const Home = () => (
   <>
@@ -34,15 +36,24 @@ function App() {
           />
           <Route
             path="/societies"
-            element={<div className="pt-20">Societies Page</div>}
+            element={
+              <div className="pt-20">
+                <Societies />
+              </div>
+            }
           />
           <Route
             path="/team"
             element={<div className="pt-20">Team Page</div>}
           />
+          {/* Update the Contact route to use the Contact component */}
           <Route
             path="/contact"
-            element={<div className="pt-20">Contact Page</div>}
+            element={
+              <div className="pt-20">
+                <Contact />
+              </div>
+            }
           />
         </Routes>
         <Footer />
