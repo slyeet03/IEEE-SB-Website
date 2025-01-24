@@ -35,19 +35,19 @@ const Societies = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-ieee-dark py-16 px-8 lg:px-24">
-      <h1 className="text-4xl font-extrabold text-center text-ieee-blue dark:text-ieee-light mb-20">
+    <div className="min-h-screen bg-white dark:bg-ieee-dark py-12 px-6 lg:px-20">
+      <h1 className="text-3xl font-extrabold text-center text-ieee-blue dark:text-ieee-light mb-16">
         Our Societies
       </h1>
-      <div className="space-y-28">
+      <div className="space-y-24">
         {societies.map((society, index) => (
           <div
             key={index}
-            className={`flex flex-col lg:flex-row items-center gap-16 ${
+            className={`flex flex-col lg:flex-row items-center gap-12 ${
               index % 2 === 1 ? "lg:flex-row-reverse" : ""
             }`}
           >
-            {/* Image Container: Background only in Dark Mode */}
+            {/* Image Container */}
             <div className="w-full max-w-md lg:max-w-sm">
               <div className="dark:bg-gray-800 dark:p-4 dark:rounded-lg">
                 <img
@@ -60,13 +60,13 @@ const Societies = () => {
 
             {/* Content */}
             <div className="flex-grow space-y-6">
-              <h2 className="text-3xl font-bold text-ieee-blue dark:text-ieee-light">
+              <h2 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light">
                 {society.name}
               </h2>
               {society.description.map((paragraph, i) => (
                 <p
                   key={i}
-                  className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed"
+                  className="text-gray-700 dark:text-gray-300 text-base leading-relaxed"
                 >
                   {paragraph}
                 </p>
