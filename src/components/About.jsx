@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import PropTypes from "prop-types";
@@ -13,6 +14,7 @@ const StatCard = ({ number, label }) => {
       ref={ref}
       initial={{ scale: 0.5, opacity: 0 }}
       animate={inView ? { scale: 1, opacity: 1 } : {}}
+      whileHover={{ scale: 1.05 }}
       transition={{ duration: 0.5 }}
       className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow"
     >
@@ -50,7 +52,7 @@ export default function About() {
           transition={{ staggerChildren: 0.2 }}
           className="space-y-16"
         >
-          {/* IEEE Main Info */}
+          
           <div className="text-center space-y-8">
             <motion.h1
               variants={fadeInUp}
@@ -73,7 +75,7 @@ export default function About() {
             </motion.p>
           </div>
 
-          {/* Stats Grid */}
+          
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <StatCard number="500+" label="Members" />
             <StatCard number="50+" label="Events" />
@@ -81,7 +83,7 @@ export default function About() {
             <StatCard number="10+" label="Mentors" />
           </div>
 
-          {/* About IEEE SB MUJ */}
+          
           <div className="space-y-12">
             <motion.div variants={fadeInUp} className="space-y-6">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white font-display">

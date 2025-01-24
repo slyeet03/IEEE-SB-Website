@@ -1,72 +1,147 @@
+
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const CircuitPattern = () => {
+const GeometricPattern = () => {
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollPosition(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <svg
-        className="absolute w-full h-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
+    <div className="absolute inset-0 w-full h-full overflow-hidden">
+      <motion.svg
+        className="w-full h-full"
+        viewBox="0 0 500 500"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <defs>
-          <linearGradient
-            id="circuit-gradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop offset="0%" stopColor="var(--circuit-color-start)" />
-            <stop offset="100%" stopColor="var(--circuit-color-end)" />
-          </linearGradient>
-        </defs>
-        <motion.path
-          d="M0,50 Q25,30 50,50 T100,50"
-          stroke="url(#circuit-gradient)"
-          strokeWidth="0.5"
-          fill="none"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.3 }}
+        {/* Circles */}
+        {[...Array(7)].map((_, i) => (
+          <motion.circle
+            key={i}
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{
+              opacity: 1 - scrollPosition / 500,
+              scale: 1 - scrollPosition / 2000,
+              x: (i + 1) * 70,
+              y: 100 + (scrollPosition / 10) * (i % 2 === 0 ? 1 : -1),
+              transition: { duration: 0.8 },
+            }}
+            cx={(i + 1) * 70}
+            cy="100"
+            r="40"
+            fill={'#00238b'}
+          />
+        ))}
+
+        {/* Rectangles */}
+        {[...Array(7)].map((_, i) => (
+          <motion.rect
+            key={i}
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{
+              opacity: 1 - scrollPosition / 300,
+              scale: 1 + scrollPosition / 3000,
+              x: 100 + i * 70,
+              y: 250 + (scrollPosition / 10) * (i % 2 === 0 ? 1 : -1),
+              transition: { duration: 1 },
+            }}
+            x={100 + i * 70}
+            y="250"
+            width="60"
+            height="60"
+            fill={`rgba(255, 0, ${i * 50}, 0.6)`}
+          />
+        ))}
+
+        {/* Circles in Bottom Row */}
+        {[...Array(7)].map((_, i) => (
+          <motion.circle
+            key={i + 7}
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{
+              opacity: 1 - scrollPosition / 500,
+              scale: 1 - scrollPosition / 2000,
+              x: (i + 1) * 70,
+              y: 400 + (scrollPosition / 10) * (i % 2 === 0 ? 1 : -1),
+              transition: { duration: 0.8 },
+            }}
+            cx={(i + 1) * 70}
+            cy="400"
+            r="40"
+            fill={`rgba(${(i + 1) * 50}, 255, 255, 0.7)`}
+          />
+        ))}
+
+        {/* Rectangles in Bottom Row */}
+        {[...Array(7)].map((_, i) => (
+          <motion.rect
+            key={i + 7}
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{
+              opacity: 1 - scrollPosition / 300,
+              scale: 1 + scrollPosition / 2500,
+              x: 100 + i * 70,
+              y: 500 + (scrollPosition / 10) * (i % 2 === 0 ? -1 : 1),
+              transition: { duration: 1 },
+            }}
+            x={100 + i * 70}
+            y="500"
+            width="60"
+            height="60"
+            fill={`rgba(0, 255, ${i * 30}, 0.6)`}
+          />
+        ))}
+
+        {/* Circles in Bottom-most Row */}
+        {[...Array(4)].map((_, i) => (
+          <motion.circle
+            key={i + 14}
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{
+              opacity: 1 - scrollPosition / 500,
+              scale: 1 - scrollPosition / 2000,
+              x: (i + 1) * 100,
+              y: 600 + (scrollPosition / 10) * (i % 2 === 0 ? 1 : -1),
+              transition: { duration: 0.8 },
+            }}
+            cx={(i + 1) * 100}
+            cy="600"
+            r="40"
+            fill={'#1565C0'}
+          />
+        ))}
+
+        {/* Last Horizontal Line Below the Circles */}
+        <motion.line
+          x1="1000" // Position the line far left beyond the screen
+          x2="1000" // Adjust the width of the line
+          y1="460" // Position just below the last circle
+          y2="460" // Same y position to keep it horizontal
+          stroke="#0D47A1" // Dark blue color
+          strokeWidth="2"
+          animate={{
+            x1: -(scrollPosition / 2) - 100, // Move further left as you scroll
+            x2: 200 - (scrollPosition / 2) - 100, // Move further left as you scroll
+          }}
           transition={{
-            duration: 2,
-            ease: "easeInOut",
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
+            duration: 1,
+            ease: "easeOut",
           }}
         />
-        <motion.path
-          d="M0,70 Q25,50 50,70 T100,70"
-          stroke="url(#circuit-gradient)"
-          strokeWidth="0.5"
-          fill="none"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.3 }}
-          transition={{
-            duration: 2,
-            ease: "easeInOut",
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-            delay: 0.5,
-          }}
-        />
-        <motion.path
-          d="M0,30 Q25,10 50,30 T100,30"
-          stroke="url(#circuit-gradient)"
-          strokeWidth="0.5"
-          fill="none"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ pathLength: 1, opacity: 0.3 }}
-          transition={{
-            duration: 2,
-            ease: "easeInOut",
-            repeat: Number.POSITIVE_INFINITY,
-            repeatType: "reverse",
-            delay: 1,
-          }}
-        />
-      </svg>
+      </motion.svg>
     </div>
   );
 };
 
-export default CircuitPattern;
+export default GeometricPattern;
+
+
+
+

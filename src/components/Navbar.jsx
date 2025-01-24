@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,6 +7,7 @@ import { Sun, Moon, Menu, X } from "lucide-react";
 export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolling, setScrolling] = useState(false); // Track scroll position
   const location = useLocation();
 
   const navItems = [
@@ -25,30 +27,57 @@ export default function Navbar() {
     }
   }, [isDark]);
 
+  // Handle scroll event
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolling(true);
+      } else {
+        setScrolling(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className="fixed w-full bg-white/90 dark:bg-ieee-dark/90 backdrop-blur-sm z-50 transition-colors duration-300 border-b border-gray-200 dark:border-gray-800">
+    <nav
+      className={`fixed w-full bg-white/90 dark:bg-ieee-dark/90 backdrop-blur-sm z-50 transition-all duration-500 ease-in-out border-b border-gray-200 dark:border-gray-800 ${
+        scrolling ? "h-14" : "h-20" // Navbar height change based on scroll
+      }`}
+    >
+
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-full pt-2"> {/* Added pt-2 to push navbar down */}
+          {/* Left side - Logo */}
           <Link to="/" className="flex-shrink-0">
             <motion.span
-              className="text-ieee-blue dark:text-white font-display font-bold text-xl"
+              className={`text-ieee-blue dark:text-white font-display font-bold transition-all duration-500 ease-in-out ${
+                scrolling ? "text-lg" : "text-3xl"
+              }`}
               whileHover={{ scale: 1.05 }}
             >
               IEEE SB MUJ
             </motion.span>
           </Link>
 
-          <div className="hidden md:block">
+          {/* Centered nav items */}
+          <div className="hidden md:flex items-center justify-center flex-grow">
             <div className="ml-10 flex items-baseline space-x-4">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-500 ease-in-out ${
                     location.pathname === item.path
                       ? "text-ieee-blue dark:text-white bg-gray-100 dark:bg-gray-800"
                       : "text-gray-700 dark:text-gray-300 hover:text-ieee-blue dark:hover:text-white"
-                  }`}
+                  } ${scrolling ? "text-xs" : "text-base"}`}
                 >
                   {item.name}
                 </Link>
@@ -56,12 +85,15 @@ export default function Navbar() {
             </div>
           </div>
 
+          {/* Right side - Buttons */}
           <div className="flex items-center gap-4">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsDark(!isDark)}
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
+              className={`p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-500 ease-in-out ${
+                scrolling ? "text-lg" : "text-xl"
+              }`}
             >
               {isDark ? (
                 <Sun className="w-5 h-5 text-yellow-400" />
@@ -73,7 +105,9 @@ export default function Navbar() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="hidden md:block bg-ieee-blue text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200"
+              className={`hidden md:block bg-ieee-blue text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all duration-500 ease-in-out ${
+                scrolling ? "text-sm py-1 px-3" : "text-lg py-2 px-4"
+              }`}
             >
               JOIN NOW
             </motion.button>
@@ -92,6 +126,7 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -110,7 +145,7 @@ export default function Navbar() {
                     location.pathname === item.path
                       ? "text-ieee-blue dark:text-white bg-gray-100 dark:bg-gray-800"
                       : "text-gray-700 dark:text-gray-300"
-                  }`}
+                  } ${scrolling ? "text-xs" : "text-base"}`}
                 >
                   {item.name}
                 </Link>
@@ -118,7 +153,7 @@ export default function Navbar() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full mt-4 bg-ieee-blue text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200"
+                className="w-full mt-4 bg-ieee-blue text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-500 ease-in-out"
               >
                 JOIN NOW
               </motion.button>
