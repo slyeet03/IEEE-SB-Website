@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,6 +14,7 @@ export default function Navbar() {
     { name: "EVENTS", path: "/events" },
     { name: "BLOG", path: "/blog" },
     { name: "SOCIETIES", path: "/societies" },
+    { name: "ACHIEVEMENTS", path: "/achievements" }, // Added Achievements
     { name: "TEAM", path: "/team" },
     { name: "CONTACT", path: "/contact" },
   ];
@@ -27,7 +27,6 @@ export default function Navbar() {
     }
   }, [isDark]);
 
-  // Handle scroll event
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -50,11 +49,8 @@ export default function Navbar() {
         scrolling ? "h-14" : "h-20" // Navbar height change based on scroll
       }`}
     >
-
-      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-full pt-2"> {/* Added pt-2 to push navbar down */}
-          {/* Left side - Logo */}
+        <div className="flex items-center justify-between h-full pt-2">
           <Link to="/" className="flex-shrink-0">
             <motion.span
               className={`text-ieee-blue dark:text-white font-display font-bold transition-all duration-500 ease-in-out ${
@@ -66,7 +62,6 @@ export default function Navbar() {
             </motion.span>
           </Link>
 
-          {/* Centered nav items */}
           <div className="hidden md:flex items-center justify-center flex-grow">
             <div className="ml-10 flex items-baseline space-x-4">
               {navItems.map((item) => (
@@ -85,7 +80,6 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Right side - Buttons */}
           <div className="flex items-center gap-4">
             <motion.button
               whileHover={{ scale: 1.1 }}
@@ -126,7 +120,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
