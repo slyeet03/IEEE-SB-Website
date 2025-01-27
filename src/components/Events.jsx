@@ -1,169 +1,119 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
-import PropTypes from "prop-types";
+import { ChevronDown } from "lucide-react";
 
 const events = [
   {
     id: 1,
     title: "Hack To The Future",
-    image: "/public/hacktofuture.avif",
-    
     tag: "IEEE SB MUJ",
     date: "2023-11-15",
   },
   {
     id: 2,
     title: "Campus Coders",
-    image: "/public/campuscoders.avif",
     tag: "IEEE SB MUJ",
     date: "2023-11-20",
   },
   {
     id: 3,
     title: "21 Days Of Code 2.0",
-    image: "/public/21daysodcode2.0.avif",
     tag: "IEEE SB MUJ",
     date: "2023-12-01",
   },
   {
     id: 4,
     title: "AI Workshop",
-    image: "/placeholder.svg?height=200&width=300",
     tag: "IEEE SB MUJ",
     date: "2023-12-10",
   },
 ];
 
-const EventCard = ({ event }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.9 }}
-    className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-  >
-    <div className="relative aspect-video overflow-hidden">
-      <img
-        src={event.image || "/placeholder.svg"}
-        alt={event.title}
-        className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
-      />
-      <div className="absolute top-0 left-0 bg-ieee-blue text-white px-3 py-1 m-2 rounded-full text-sm font-semibold">
-        {event.tag}
-      </div>
-    </div>
-    <div className="p-6">
-      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-        {event.title}
-      </h3>
-      <div className="flex items-center text-gray-600 dark:text-gray-400">
-        <Calendar className="w-4 h-4 mr-2" />
-        <span>{new Date(event.date).toLocaleDateString()}</span>
-      </div>
-    </div>
-  </motion.div>
-);
+export default function EventsFilterBar() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedYear, setSelectedYear] = useState("2023");
+  const [selectedTag, setSelectedTag] = useState("SB MUJ");
 
-EventCard.propTypes = {
-  event: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    tag: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-  }).isRequired,
-};
+  const filteredEvents = events.filter(
+    (event) =>
+      event.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      event.date.startsWith(selectedYear) &&
+      event.tag === selectedTag
+  );
 
-export default function Events() {
-  const [currentPage, setCurrentPage] = useState(0);
-  const eventsPerPage = 3;
-  const totalPages = Math.ceil(events.length / eventsPerPage);
-
-  const nextPage = () => {
-    setCurrentPage((prev) => (prev + 1) % totalPages);
-  };
-
-  const prevPage = () => {
-    setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
-  };
+  const years = ["2023", "2024", "2025"];
+  const tags = ["SB MUJ", "IEEE Region", "Global IEEE"];
 
   return (
-    <section className="py-20 bg-gray-100 dark:bg-gray-900">
+    <div className="w-full py-6 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 font-display">
-            Latest Events
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Discover our upcoming and ongoing events
-          </p>
-        </div>
+        <div className="flex flex-col md:flex-row gap-4 items-center">
+          {/* Search Bar */}
+          <input
+            type="text"
+            placeholder="Search Events"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full md:w-1/2 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-        <div className="relative">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <AnimatePresence mode="wait">
-              {events
-                .slice(
-                  currentPage * eventsPerPage,
-                  (currentPage + 1) * eventsPerPage
-                )
-                .map((event) => (
-                  <EventCard key={event.id} event={event} />
-                ))}
-            </AnimatePresence>
+          {/* Year Dropdown */}
+          <div className="relative w-full md:w-1/4">
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="appearance-none w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
 
-          <motion.div
-            className="absolute top-1/2 -left-12 transform -translate-y-1/2"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <button
-              onClick={prevPage}
-              className="p-2 rounded-full bg-white dark:bg-gray-700 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+          {/* Tag Dropdown */}
+          <div className="relative w-full md:w-1/4">
+            <select
+              value={selectedTag}
+              onChange={(e) => setSelectedTag(e.target.value)}
+              className="appearance-none w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <ChevronLeft className="w-6 h-6 text-gray-600 dark:text-gray-400" />
-            </button>
-          </motion.div>
-
-          <motion.div
-            className="absolute top-1/2 -right-12 transform -translate-y-1/2"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <button
-              onClick={nextPage}
-              className="p-2 rounded-full bg-white dark:bg-gray-700 shadow-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-600 dark:text-gray-400" />
-            </button>
-          </motion.div>
+              {tags.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+          </div>
         </div>
 
-        <div className="flex justify-center mt-8 space-x-2">
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentPage(i)}
-              className={`w-2 h-2 rounded-full transition-colors ${
-                i === currentPage
-                  ? "bg-ieee-blue"
-                  : "bg-gray-300 dark:bg-gray-600"
-              }`}
-            />
-          ))}
-        </div>
-
-        <div className="text-center mt-12">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-ieee-blue text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300 shadow-md"
-          >
-            View All Events
-          </motion.button>
+        {/* Filtered Events List */}
+        <div className="mt-6">
+          {filteredEvents.length > 0 ? (
+            <ul className="space-y-4">
+              {filteredEvents.map((event) => (
+                <li
+                  key={event.id}
+                  className="p-4 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800"
+                >
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    {event.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {new Date(event.date).toLocaleDateString()} - {event.tag}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-600 dark:text-gray-400 text-center">
+              No events found matching the criteria.
+            </p>
+          )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
