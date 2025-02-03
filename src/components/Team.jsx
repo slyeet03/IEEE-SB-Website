@@ -20,6 +20,7 @@ const Team = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
     const fetchTeamData = async () => {
@@ -39,11 +40,22 @@ const Team = () => {
     fetchTeamData();
   }, [year, selectedTab]);
 
-  const groupedData = teamData.reduce((acc, member) => {
-    if (!acc[member.society]) acc[member.society] = { EC: [], CC: [] };
-    acc[member.society][member.committee].push(member);
-    return acc;
-  }, {});
+  useEffect(() => {
+    // Get the image URLs for the selected tab
+    const selectedImages = teamData
+      .filter((member) => member.committee === selectedTab || selectedTab === "All")
+      .map((member) => member.photo?.asset?.url)
+      .filter(Boolean);
+
+    setImageUrls(selectedImages);
+  }, [teamData, selectedTab]);
+
+  // Preload images
+  useEffect(() => {
+    if (imageUrls.length > 0) {
+      preloadImages(imageUrls);
+    }
+  }, [imageUrls]);
 
   const preloadImages = (urls) => {
     urls.forEach((url) => {
@@ -52,10 +64,15 @@ const Team = () => {
     });
   };
 
+  const groupedData = teamData.reduce((acc, member) => {
+    if (!acc[member.society]) acc[member.society] = { EC: [], CC: [] };
+    acc[member.society][member.committee].push(member);
+    return acc;
+  }, {});
+
   const renderImage = (photo, person) => { 
     const imageUrl = photo?.asset?.url;
     if (imageUrl) {
-      preloadImages([imageUrl]); 
       return (
         <div className="relative h-80 w-full group">
           <img
