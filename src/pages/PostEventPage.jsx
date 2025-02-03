@@ -10,10 +10,6 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import PropTypes from "prop-types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 const PostEventPage = ({ events }) => {
   const { id } = useParams();
@@ -45,30 +41,31 @@ const PostEventPage = ({ events }) => {
         <Link
           to="/events"
           className="inline-flex items-center text-ieee-blue dark:text-blue-400 hover:underline mb-8"
+          aria-label="Back to Events"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Events
         </Link>
 
-        <Card className="overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
           <div className="relative h-96">
             <img
               src={event.poster || "/placeholder.svg?height=400&width=800"}
-              alt={event.title}
+              alt={`Event poster for ${event.title}`}
               className="w-full h-full object-cover"
             />
-            <Badge className="absolute top-4 left-4 text-lg bg-green-500 text-white px-4 py-2">
+            <span className="absolute top-4 left-4 text-lg bg-green-500 text-white px-4 py-2">
               Completed
-            </Badge>
+            </span>
           </div>
 
-          <CardHeader>
-            <CardTitle className="text-4xl font-bold text-gray-900 dark:text-white">
+          <div className="p-6">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
               {event.title}
-            </CardTitle>
-          </CardHeader>
+            </h1>
+          </div>
 
-          <CardContent className="space-y-8">
+          <div className="p-6 space-y-8">
             <div className="flex flex-wrap gap-6">
               <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <MapPin className="w-5 h-5 mr-2 text-green-500" />
@@ -84,7 +81,7 @@ const PostEventPage = ({ events }) => {
               </div>
             </div>
 
-            <Separator />
+            <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -95,7 +92,7 @@ const PostEventPage = ({ events }) => {
               </p>
             </div>
 
-            <Separator />
+            <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -108,7 +105,7 @@ const PostEventPage = ({ events }) => {
               </ul>
             </div>
 
-            <Separator />
+            <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -123,6 +120,12 @@ const PostEventPage = ({ events }) => {
                     }`}
                     whileHover={{ scale: 1.05 }}
                     onClick={() => setActiveImage(index)}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        setActiveImage(index);
+                      }
+                    }}
                   >
                     <img
                       src={image || "/placeholder.svg?height=200&width=200"}
@@ -134,7 +137,7 @@ const PostEventPage = ({ events }) => {
               </div>
             </div>
 
-            <Separator />
+            <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -142,8 +145,11 @@ const PostEventPage = ({ events }) => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {event.winners.map((winner, index) => (
-                  <Card key={index} className="bg-gray-50 dark:bg-gray-700">
-                    <CardContent className="p-6">
+                  <div
+                    key={index}
+                    className="bg-gray-50 dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden"
+                  >
+                    <div className="p-6">
                       <div className="flex items-center mb-4">
                         <Trophy
                           className={`w-8 h-8 mr-3 ${
@@ -167,20 +173,23 @@ const PostEventPage = ({ events }) => {
                       <p className="text-green-600 dark:text-green-400 font-semibold">
                         {winner.prize}
                       </p>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button className="w-full bg-green-500 text-white py-3 px-6 rounded-md hover:bg-green-600 transition-colors duration-300 font-semibold text-lg flex items-center justify-center">
+              <button
+                className="w-full bg-green-500 text-white py-3 px-6 rounded-md hover:bg-green-600 transition-colors duration-300 font-semibold text-lg flex items-center justify-center"
+                aria-label="View Full Event Gallery"
+              >
                 <Camera className="w-6 h-6 mr-2" />
                 View Full Gallery
-              </Button>
+              </button>
             </motion.div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

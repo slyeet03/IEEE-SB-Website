@@ -10,10 +10,6 @@ import {
   ExternalLink,
 } from "lucide-react";
 import PropTypes from "prop-types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 const PreEventPage = ({ events }) => {
   const { id } = useParams();
@@ -49,25 +45,25 @@ const PreEventPage = ({ events }) => {
           Back to Events
         </Link>
 
-        <Card className="overflow-hidden">
+        <div className="overflow-hidden bg-white dark:bg-gray-800 rounded-xl shadow-lg">
           <div className="relative h-96">
             <img
               src={event.poster || "/placeholder.svg?height=400&width=800"}
               alt={event.title}
               className="w-full h-full object-cover"
             />
-            <Badge className="absolute top-4 left-4 text-lg bg-ieee-blue text-white px-4 py-2">
+            <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-ieee-blue rounded absolute top-4 left-4 text-lg">
               {event.tag}
-            </Badge>
+            </span>
           </div>
 
-          <CardHeader>
-            <CardTitle className="text-4xl font-bold text-gray-900 dark:text-white">
+          <div className="p-6">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white">
               {event.title}
-            </CardTitle>
-          </CardHeader>
+            </h2>
+          </div>
 
-          <CardContent className="space-y-8">
+          <div className="p-6 space-y-8">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               <div className="flex items-center text-gray-700 dark:text-gray-300">
                 <MapPin className="w-5 h-5 mr-2 text-ieee-blue" />
@@ -96,7 +92,7 @@ const PreEventPage = ({ events }) => {
               </div>
             </div>
 
-            <Separator />
+            <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -107,7 +103,7 @@ const PreEventPage = ({ events }) => {
               </p>
             </div>
 
-            <Separator />
+            <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -115,8 +111,11 @@ const PreEventPage = ({ events }) => {
               </h2>
               <div className="space-y-4">
                 {event.schedule.map((item, index) => (
-                  <Card key={index}>
-                    <CardContent className="flex items-start p-4">
+                  <div
+                    key={index}
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg"
+                  >
+                    <div className="p-4 flex items-start">
                       <div className="flex-shrink-0 w-24 font-semibold text-ieee-blue dark:text-blue-400">
                         {item.time}
                       </div>
@@ -128,13 +127,13 @@ const PreEventPage = ({ events }) => {
                           {item.description}
                         </p>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            <Separator />
+            <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -142,8 +141,11 @@ const PreEventPage = ({ events }) => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {event.organizingCommittee.map((member, index) => (
-                  <Card key={index}>
-                    <CardContent className="flex items-center space-x-4 p-4">
+                  <div
+                    key={index}
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg"
+                  >
+                    <div className="p-4 flex items-center space-x-4">
                       <img
                         src="/placeholder.svg?height=100&width=100"
                         alt={member.name}
@@ -157,13 +159,13 @@ const PreEventPage = ({ events }) => {
                           {member.role}
                         </p>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            <Separator />
+            <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -171,8 +173,11 @@ const PreEventPage = ({ events }) => {
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 {event.sponsors.map((sponsor, index) => (
-                  <Card key={index}>
-                    <CardContent className="p-4 text-center">
+                  <div
+                    key={index}
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg"
+                  >
+                    <div className="p-4 text-center">
                       <img
                         src={
                           sponsor.logo ||
@@ -187,17 +192,14 @@ const PreEventPage = ({ events }) => {
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         {sponsor.tier} Sponsor
                       </p>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                asChild
-                className="w-full bg-ieee-blue text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-300 font-semibold text-lg flex items-center justify-center"
-              >
+              <button className="w-full bg-ieee-blue text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors duration-300 font-semibold text-lg flex items-center justify-center">
                 <a
                   href={event.registrationLink}
                   target="_blank"
@@ -206,10 +208,10 @@ const PreEventPage = ({ events }) => {
                   Register Now
                   <ExternalLink className="ml-2 h-5 w-5" />
                 </a>
-              </Button>
+              </button>
             </motion.div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

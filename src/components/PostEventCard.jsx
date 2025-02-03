@@ -1,12 +1,10 @@
 import { motion } from "framer-motion";
 import { Calendar, MapPin, Users, CheckCircle } from "lucide-react";
 import PropTypes from "prop-types";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 const PostEventCard = ({ event }) => {
   return (
-    <Card className="overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
       <motion.div whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
         <div className="relative h-48">
           <img
@@ -14,11 +12,11 @@ const PostEventCard = ({ event }) => {
             alt={event.title}
             className="w-full h-full object-cover"
           />
-          <Badge className="absolute top-2 left-2 bg-green-500 text-white">
+          <span className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
             Completed
-          </Badge>
+          </span>
         </div>
-        <CardContent className="p-4">
+        <div className="p-4">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
             {event.title}
           </h3>
@@ -43,8 +41,8 @@ const PostEventCard = ({ event }) => {
               <span>Event Concluded</span>
             </div>
           </div>
-        </CardContent>
-        <CardFooter className="p-4 bg-gray-50 dark:bg-gray-800">
+        </div>
+        <div className="p-4 bg-gray-50 dark:bg-gray-800">
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -52,9 +50,9 @@ const PostEventCard = ({ event }) => {
           >
             View Details
           </motion.div>
-        </CardFooter>
+        </div>
       </motion.div>
-    </Card>
+    </div>
   );
 };
 
