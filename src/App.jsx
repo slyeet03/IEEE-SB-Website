@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import Events from "./components/Events";
 import Testimonials from "./components/Testimonials";
 import Achievements from "./components/Achievements";
 import BlogPosts from "./components/BlogPosts";
@@ -14,7 +13,6 @@ const Home = () => (
   <>
     <Hero />
     <About />
-    <Events />
     <Testimonials />
     <BlogPosts />
     <Achievements />
@@ -30,11 +28,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route
             path="/events"
-            element={
-              <div className="pt-20">
-                <Events />
-              </div>
-            }
+            element={<div className="pt-20">Event Page</div>}
           />
           <Route
             path="/blog"
@@ -61,7 +55,6 @@ function App() {
             path="/team"
             element={<div className="pt-20">Team Page</div>}
           />
-          {/* Update the Contact route to use the Contact component */}
           <Route
             path="/contact"
             element={
