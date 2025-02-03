@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { client } from "../../sanity"; 
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { client } from "../../sanity";
 import { Container } from './Container';
-import { FadeIn, FadeInStagger } from './FadeIn'; 
+import { FadeIn, FadeInStagger } from './FadeIn';
 import { FaInstagram, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FiChevronDown } from 'react-icons/fi';
 
 const socialMediaIcons = {
   instagram: <FaInstagram />,
@@ -14,214 +16,182 @@ const socialMediaIcons = {
 const Team = () => {
   const [teamData, setTeamData] = useState([]);
   const [year, setYear] = useState("2024");
-  const [selectedTab, setSelectedTab] = useState("Advisory"); 
-  const [selectedCommittee, setSelectedCommittee] = useState("EC");
+  const [selectedTab, setSelectedTab] = useState("Advisory");
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchTeamData = async () => {
+      setLoading(true);
       const query = `*[_type == "team" && year == $year] {
-        name,
-        photo {
-          asset -> {
-            url
-          }
-        },
-        committee,
-        position,
-        socialMedia[] {
-          platform,
-          url
-        },
-        society
+        name, photo { asset -> { url } }, committee, position, socialMedia[] { platform, url }, society
       } | order(society, committee)`;
-
       try {
         const data = await client.fetch(query, { year });
-        console.log('Fetched Team Data:', data);
         setTeamData(data);
       } catch (error) {
-        console.error('Error fetching team data:', error);
         setError('Failed to load team data.');
+      } finally {
+        setLoading(false);
       }
     };
-
-    let isMounted = true;
-    if (isMounted) {
-      fetchTeamData();
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [year, selectedTab, selectedCommittee]);
+    fetchTeamData();
+  }, [year, selectedTab]);
 
   const groupedData = teamData.reduce((acc, member) => {
-    if (!acc[member.society]) acc[member.society] = { EC: [], CC: [], Faculty: [], Advisory: [] };
+    if (!acc[member.society]) acc[member.society] = { EC: [], CC: [] };
     acc[member.society][member.committee].push(member);
     return acc;
   }, {});
 
-  const sortMembers = (members) => {
-    return members.sort((a, b) => {
-      if (a.position.toLowerCase().includes("chairperson")) return -1;
-      if (b.position.toLowerCase().includes("chairperson")) return 1;
-      if (a.position.toLowerCase().includes("vice-chairperson")) return -1;
-      if (b.position.toLowerCase().includes("vice-chairperson")) return 1;
-      return 0;
+  const preloadImages = (urls) => {
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
     });
   };
 
-  const handleTabClick = (tab) => {
-    setSelectedTab(tab);
-    setSelectedCommittee("EC");
-  };
-
-  const renderImage = (photo) => {
-    if (photo?.asset?.url) {
-      return <img src={photo.asset.url} alt="Team member" className="h-80 w-full object-cover transition-transform duration-500 group-hover:scale-105" />;
+  const renderImage = (photo, person) => { 
+    const imageUrl = photo?.asset?.url;
+    if (imageUrl) {
+      preloadImages([imageUrl]); 
+      return (
+        <div className="relative h-80 w-full group">
+          <img
+            src={imageUrl}
+            alt="Team member"
+            className="rounded-t-xl transition-transform duration-500 group-hover:scale-105"
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+          />
+          <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+            <p className="text-lg font-semibold text-white">{person.name}</p>
+            <p className="text-sm text-gray-300">{person.position}</p>
+            <div className="flex space-x-3 mt-2">{renderSocialLinks(person.socialMedia)}</div>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="h-80 w-full bg-gray-300 dark:bg-gray-600 flex justify-center items-center group">
+          <span className="text-gray-500 dark:text-gray-200 text-lg">No Image</span>
+          <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+            <p className="text-lg font-semibold text-white">{person.name}</p>
+            <p className="text-sm text-gray-300">{person.position}</p>
+            <div className="flex space-x-3 mt-2">{renderSocialLinks(person.socialMedia)}</div>
+          </div>
+        </div>
+      );
     }
-    return (
-      <div className="h-80 w-full bg-gray-300 dark:bg-gray-600 flex justify-center items-center">
-        <span className="text-gray-500 dark:text-gray-200 text-lg">No Image</span>
-      </div>
-    );
   };
 
-  const renderSocialLinks = (socialMedia) => {
-    return socialMedia?.map((social, index) => {
-      const normalizedPlatform = social.platform.trim().toLowerCase(); 
-      const Icon = socialMediaIcons[normalizedPlatform];
+  const renderSocialLinks = (socialMedia) => (
+    socialMedia?.map((social, index) => {
+      const Icon = socialMediaIcons[social.platform.trim().toLowerCase()];
       return Icon ? (
-        <a key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400 dark:hover:text-gray-200 transition-colors duration-300">
+        <a key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="text-xl text-white hover:text-gray-400 dark:hover:text-gray-200 transition-all duration-300">
           {Icon}
         </a>
       ) : null;
-    });
-  };
+    })
+  );
 
   return (
-    <Container className="mt-24 sm:mt-32 lg:mt-40">
-      <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-8">Team</h1>
-      <div className="flex items-center space-x-4 mb-8">
-  <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Year:</span>
-  <select
-    id="year"
-    value={year}
-    onChange={(e) => setYear(e.target.value)}
-    className="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg shadow-sm focus:outline-none hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300"
-  >
-    <option value="2022">2022</option>
-    <option value="2023">2023</option>
-    <option value="2024">2024</option>
-  </select>
-</div>
+    <Container className="mt-16 sm:mt-24 lg:mt-32 relative">
+      <div className="text-center mt-8 mb-12">
+        <h1 className="text-5xl font-bold text-ieee-blue dark:text-ieee-light">Meet Our Team</h1>
+        <p className="mt-4 text-xl text-gray-600 dark:text-gray-400">
+          Discover the talented individuals behind the development of our website.
+        </p>
+        <a
+          href="#team-details"
+          className="mt-4 inline-block text-lg font-semibold text-ieee-blue hover:text-ieee-dark dark:text-ieee-light dark:hover:text-ieee-dark transition-all duration-300"
+        >
+          Click here to meet the team who made this website
+        </a>
+      </div>
 
+      <div className="flex justify-between mb-8">
+        <div className="flex items-center space-x-4">
+          <span className="text-xl font-semibold text-ieee-blue dark:text-ieee-light">Year:</span>
+          <motion.div className="relative">
+            <button
+              onClick={() => setDropdownOpen((prev) => !prev)}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+            >
+              <span className="font-medium text-sm">{year}</span>
+              <FiChevronDown className={`transition-transform ${dropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
+            </button>
 
-      <div className="flex space-x-4 mb-8">
-        {["Advisory", "IEEE SB", "IEEE CS", "IEEE WIE"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => handleTabClick(tab)}
-            className={`px-4 py-2 rounded-lg font-semibold ${selectedTab === tab ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'} transition-all duration-300`}
-          >
-            {tab}
-          </button>
-        ))}
+            {dropdownOpen && (
+              <motion.ul
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute bg-white dark:bg-gray-800 shadow-xl rounded-md w-32 mt-2 z-10"
+              >
+                {["2022", "2023", "2024"].map((yr) => (
+                  <motion.li
+                    key={yr}
+                    onClick={() => {
+                      setYear(yr);
+                      setDropdownOpen(false);
+                    }}
+                    className="px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                  >
+                    {yr}
+                  </motion.li>
+                ))}
+              </motion.ul>
+            )}
+          </motion.div>
+        </div>
+
+        <div className="flex space-x-4">
+          {["Advisory", "IEEE SB", "IEEE CS", "IEEE WIE"].map((tab) => (
+            <motion.button
+              key={tab}
+              onClick={() => setSelectedTab(tab)}
+              className={`px-4 py-2 rounded-lg font-semibold ${selectedTab === tab ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'} transition-all duration-300`}
+              whileHover={{ scale: 1.05 }}
+            >
+              {tab}
+            </motion.button>
+          ))}
+        </div>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
 
-      {selectedTab && (
-        <>
-          <div className="mb-8">
-            <hr className="border-t-2 mb-4 border-gray-300 dark:border-gray-600" />
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">{selectedTab}</h2>
-
-            {selectedTab === "Advisory" ? (
-              <>
-                <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Faculty</h3>
+      {loading ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {[...Array(8)].map((_, index) => (
+            <div key={index} className="h-80 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg" />
+          ))}
+        </div>
+      ) : (
+        Object.entries(groupedData[selectedTab] || {}).map(([committee, members]) => (
+          <div key={committee} className="mb-12">
+            <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4">{committee.replace("EC", "Executive Committee").replace("CC", "Core Committee")}</h3>
+            <hr className="my-4 border-gray-300 dark:border-gray-700" />
+            {members.length > 0 ? (
+              <FadeInStagger>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {groupedData[selectedTab]?.["Faculty"]?.map((person) => (
+                  {members.map((person) => (
                     <FadeIn key={`${person.name}-${person.position}`}>
                       <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
-                        {renderImage(person.photo)}
-                        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6">
-                          <p className="text-lg font-semibold text-white">{person.name}</p>
-                          <p className="text-sm text-gray-300">{person.position}</p>
-                          <div className="flex space-x-3 mt-2">
-                            {renderSocialLinks(person.socialMedia)}
-                          </div>
-                        </div>
+                        {renderImage(person.photo, person)} {/* Pass 'person' here */}
                       </div>
                     </FadeIn>
                   ))}
                 </div>
-
-                <hr className="border-t-2 mb-8 border-gray-300 dark:border-gray-600" />
-                <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Advisory</h3>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {groupedData[selectedTab]?.["Advisory"]?.map((person) => (
-                    <FadeIn key={`${person.name}-${person.position}`}>
-                      <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
-                        {renderImage(person.photo)}
-                        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6">
-                          <p className="text-lg font-semibold text-white">{person.name}</p>
-                          <p className="text-sm text-gray-300">{person.position}</p>
-                          <div className="flex space-x-3 mt-2">
-                            {renderSocialLinks(person.socialMedia)}
-                          </div>
-                        </div>
-                      </div>
-                    </FadeIn>
-                  ))}
-                </div>
-              </>
+              </FadeInStagger>
             ) : (
-              <>
-                <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Executive Committee</h3>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {sortMembers(groupedData[selectedTab]?.["EC"] || []).map((person) => (
-                    <FadeIn key={`${person.name}-${person.position}`}>
-                      <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
-                        {renderImage(person.photo)}
-                        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6">
-                          <p className="text-lg font-semibold text-white">{person.name}</p>
-                          <p className="text-sm text-gray-300">{person.position}</p>
-                          <div className="flex space-x-3 mt-2">
-                            {renderSocialLinks(person.socialMedia)}
-                          </div>
-                        </div>
-                      </div>
-                    </FadeIn>
-                  ))}
-                </div>
-
-                <div className="mb-14"></div>
-
-                <hr className="border-t-2 mb-12 border-gray-300 dark:border-gray-600 mx-4" />
-
-                <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Core Committee</h3>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {sortMembers(groupedData[selectedTab]?.["CC"] || []).map((person) => (
-                    <FadeIn key={`${person.name}-${person.position}`}>
-                      <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
-                        {renderImage(person.photo)}
-                        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6">
-                          <p className="text-lg font-semibold text-white">{person.name}</p>
-                          <p className="text-sm text-gray-300">{person.position}</p>
-                          <div className="flex space-x-3 mt-2">
-                            {renderSocialLinks(person.socialMedia)}
-                          </div>
-                        </div>
-                      </div>
-                    </FadeIn>
-                  ))}
-                </div>
-              </>
+              <p className="text-lg text-gray-500 dark:text-gray-400">No team members found in this section.</p>
             )}
           </div>
-        </>
+        ))
       )}
     </Container>
   );

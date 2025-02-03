@@ -11,6 +11,7 @@ import Societies from "./components/Societies";
 import Contact from "./components/Contact";
 import PreEventPage from "./pages/PreEventPage";
 import PostEventPage from "./pages/PostEventPage";
+import Team from "./components/Team"
 
 const events = [
   {
@@ -174,7 +175,11 @@ function App() {
           />
           <Route
             path="/team"
-            element={<div className="pt-20">Team Page</div>}
+            element={
+              <div className="pt-20">
+                <Team />
+              </div>
+            }
           />
           <Route
             path="/contact"
