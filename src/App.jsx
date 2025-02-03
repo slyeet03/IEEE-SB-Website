@@ -8,6 +8,7 @@ import BlogPosts from "./components/BlogPosts";
 import Footer from "./components/Footer";
 import Societies from "./components/Societies"; 
 import Contact from "./components/Contact";
+import Team from "./components/Team"
 
 const Home = () => (
   <>
@@ -53,7 +54,11 @@ function App() {
           />
           <Route
             path="/team"
-            element={<div className="pt-20">Team Page</div>}
+            element={
+              <div className="pt-20">
+                <Team />
+              </div>
+            }
           />
           <Route
             path="/contact"
