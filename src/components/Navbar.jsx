@@ -88,6 +88,19 @@ export default function Navbar() {
               className={`p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-500 ease-in-out ${
                 scrolling ? "text-lg" : "text-xl"
               }`}
+              animate={{
+                boxShadow: [
+                  "0px 0px 10px rgba(0, 128, 255, 0.5)",
+                  "0px 0px 20px rgba(0, 128, 255, 0.8)",
+                  "0px 0px 10px rgba(0, 128, 255, 0.5)",
+                ],
+              }}
+              transition={{
+                repeat: Infinity,
+                repeatType: "reverse",
+                duration: 1.5,
+                ease: "easeInOut",
+              }}
             >
               {isDark ? (
                 <Sun className="w-5 h-5 text-yellow-400" />
