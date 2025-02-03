@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 
 const ElectricBackground = ({ children }) => {
   const [pulses, setPulses] = useState([]);
@@ -84,6 +85,9 @@ const ElectricBackground = ({ children }) => {
       </div>
     </div>
   );
+};
+ElectricBackground.propTypes = {
+  children: PropTypes.node,
 };
 
 export default ElectricBackground;

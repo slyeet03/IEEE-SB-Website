@@ -2,27 +2,27 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import CircuitPattern from "./CircuitPattern";
 import gsap from "gsap";
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import ElectricBackground from "./background";
 
 export default function Hero() {
-  const words = ["Innovation", "Technology", "Collaboration"];
+  const words = useMemo(() => ["Innovation", "Technology", "Collaboration"], []);
   const wordRef = useRef(null);
   const [currentWord, setCurrentWord] = useState(words[0]);
-  let index = 0;
-  const [ref, inView] = useInView({
+  const indexRef = useRef(0);
+  const [ref] = useInView({
     threshold: 0.1,
     triggerOnce: true,
   });
 
   useEffect(() => {
     const interval = setInterval(() => {
-      index = (index + 1) % words.length;
-      setCurrentWord(words[index]);
+      indexRef.current = (indexRef.current + 1) % words.length;
+      setCurrentWord(words[indexRef.current]);
     }, 3000); // Change word every 2 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [words]);
 
   useEffect(() => {
     if (wordRef.current) {

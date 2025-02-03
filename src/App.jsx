@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Events from "./components/Events";
 import Testimonials from "./components/Testimonials";
 import Achievements from "./components/Achievements";
 import BlogPosts from "./components/BlogPosts";
@@ -10,7 +11,6 @@ import Societies from "./components/Societies";
 import Contact from "./components/Contact";
 import PreEventPage from "./pages/PreEventPage";
 import PostEventPage from "./pages/PostEventPage";
-import Events from "./components/Events";
 
 const events = [
   {

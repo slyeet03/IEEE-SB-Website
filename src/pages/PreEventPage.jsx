@@ -52,7 +52,7 @@ const PreEventPage = ({ events }) => {
               alt={event.title}
               className="w-full h-full object-cover"
             />
-            <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-ieee-blue rounded absolute top-4 left-4 text-lg">
+            <span className="inline-block px-2 py-1 font-semibold text-white bg-ieee-blue rounded absolute top-4 left-4 text-lg">
               {event.tag}
             </span>
           </div>
