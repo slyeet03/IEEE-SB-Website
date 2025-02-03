@@ -11,7 +11,6 @@
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
@@ -57,11 +56,15 @@
   align-items: center;
 }
 
-.group:hover .absolute {
+/* .group:hover .absolute {
   opacity: 1;
 }
 
 .absolute {
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+} */
+
+circle {
+  opacity: 0;
 }
