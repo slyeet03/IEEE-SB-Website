@@ -12,6 +12,7 @@ import Contact from "./components/Contact";
 import PreEventPage from "./pages/PreEventPage";
 import PostEventPage from "./pages/PostEventPage";
 import Team from "./components/Team"
+import WebsiteTeam from "./components/WebsiteTeam"
 
 const events = [
   {
@@ -162,6 +163,14 @@ function App() {
             element={
               <div className="pt-20">
                 <Societies />
+              </div>
+            }
+          />
+          <Route
+            path="/website-team"
+            element={
+              <div className="pt-20">
+                <WebsiteTeam />
               </div>
             }
           />

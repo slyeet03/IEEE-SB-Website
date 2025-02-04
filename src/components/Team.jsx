@@ -3,14 +3,14 @@ import { motion } from 'framer-motion';
 import { client } from "../../sanity";
 import { Container } from './Container';
 import { FadeIn, FadeInStagger } from './FadeIn';
-import { FaInstagram, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaInstagram, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { FiChevronDown } from 'react-icons/fi';
 
 const socialMediaIcons = {
   instagram: <FaInstagram />,
-  facebook: <FaFacebook />,
   twitter: <FaTwitter />,
   linkedin: <FaLinkedin />,
+  github: <FaGithub />, 
 };
 
 const Team = () => {
@@ -21,7 +21,7 @@ const Team = () => {
   const [error, setError] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
-  const [imagesLoaded, setImagesLoaded] = useState(0); // Track number of images loaded
+  const [imagesLoaded, setImagesLoaded] = useState(0);
 
   useEffect(() => {
     const fetchTeamData = async () => {
@@ -42,17 +42,15 @@ const Team = () => {
   }, [year, selectedTab]);
 
   useEffect(() => {
-    // Get the image URLs for the selected tab
     const selectedImages = teamData
       .filter((member) => member.committee === selectedTab || selectedTab === "All")
       .map((member) => member.photo?.asset?.url)
       .filter(Boolean);
 
     setImageUrls(selectedImages);
-    setImagesLoaded(0); // Reset loading state when tab or year changes
+    setImagesLoaded(0); 
   }, [teamData, selectedTab]);
 
-  // Preload images
   useEffect(() => {
     if (imageUrls.length > 0) {
       preloadImages(imageUrls);
@@ -63,7 +61,7 @@ const Team = () => {
     urls.forEach((url) => {
       const img = new Image();
       img.src = url;
-      img.onload = () => setImagesLoaded((prev) => prev + 1); // Increment loaded image count
+      img.onload = () => setImagesLoaded((prev) => prev + 1);
     });
   };
 
@@ -109,13 +107,13 @@ const Team = () => {
     socialMedia?.map((social, index) => {
       const Icon = socialMediaIcons[social.platform.trim().toLowerCase()];
       return Icon ? (
-        <a key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="text-xl text-white hover:text-gray-400 dark:hover:text-gray-200 transition-all duration-300">
+        <a key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="text-xl text-ieee-blue hover:text-gray-400 dark:hover:text-gray-200 transition-all duration-300">
           {Icon}
         </a>
       ) : null;
     })
   );
-
+  
   return (
     <Container className="mt-16 sm:mt-24 lg:mt-32 relative">
       <div className="text-center mt-8 mb-12">
@@ -124,7 +122,7 @@ const Team = () => {
           Discover the talented individuals behind the development of our website.
         </p>
         <a
-          href="#team-details"
+          href="/website-team"
           className="mt-4 inline-block text-lg font-semibold text-ieee-blue hover:text-ieee-dark dark:text-ieee-light dark:hover:text-ieee-dark transition-all duration-300"
         >
           Click here to meet the team who made this website
@@ -201,7 +199,7 @@ const Team = () => {
                   {members.map((person) => (
                     <FadeIn key={`${person.name}-${person.position}`}>
                       <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
-                        {renderImage(person.photo, person)} {/* Pass 'person' here */}
+                        {renderImage(person.photo, person)}
                       </div>
                     </FadeIn>
                   ))}

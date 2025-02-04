@@ -9,7 +9,6 @@ const Contact = () => {
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Team Section */}
         <div className="space-y-8">
           <h2 className="text-3xl font-semibold text-center text-ieee-blue dark:text-ieee-light">
             Our Team
@@ -28,12 +27,11 @@ const Contact = () => {
                 key={name}
                 className="flex items-center space-x-4 p-4 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 shadow-md transform transition-transform hover:scale-105"
               >
-                {/* Avatar */}
+
                 <div className="w-10 h-10 flex-shrink-0 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-sm">
                   {name.charAt(0)}
                 </div>
 
-                {/* Info */}
                 <div className="flex-1">
                   <p className="text-base font-medium">{name}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{role}</p>
@@ -51,13 +49,12 @@ const Contact = () => {
           </div>
         </div>
 
-        {/* Contact Form */}
         <div className="space-y-8">
           <h2 className="text-3xl font-semibold text-center text-ieee-blue dark:text-ieee-light">
             Get in Touch
           </h2>
           <form className="space-y-6" autoComplete="on">
-            {/* Name Input */}
+
             <div>
               <label htmlFor="name" className="block text-sm font-medium">
                 Full Name
@@ -71,7 +68,6 @@ const Contact = () => {
               />
             </div>
 
-            {/* Email Input */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium">
                 Email Address
@@ -85,7 +81,7 @@ const Contact = () => {
               />
             </div>
 
-            {/* Message Input */}
+
             <div>
               <label htmlFor="message" className="block text-sm font-medium">
                 Message
@@ -99,7 +95,7 @@ const Contact = () => {
               ></textarea>
             </div>
 
-            {/* Submit Button */}
+
             <motion.button
               type="submit"
               className="w-full py-3 text-sm font-medium rounded-lg bg-blue-500 text-white shadow-lg transform transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -111,7 +107,7 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* FAQ Section */}
+
       <div className="mt-16 space-y-8">
         <h2 className="text-3xl font-semibold text-center text-ieee-blue dark:text-ieee-light">
           Frequently Asked Questions
@@ -119,36 +115,32 @@ const Contact = () => {
 
         <div className="space-y-4">
           {[
-            {
-              question: "How can I join IEEE?",
-              answer:
-                "You can contact any of the team members listed above or visit the official IEEE membership website to register.",
-            },
-            {
-              question: "What kind of events does IEEE organize?",
-              answer:
-                "We host workshops, technical talks, coding competitions, hackathons, and community outreach programs.",
-            },
-            {
-              question: "Where can I find updates on upcoming events?",
-              answer:
-                "Follow our social media handles or keep an eye on your student portal for regular updates.",
-            },
-            {
-              question: "Do I need any technical experience to participate?",
-              answer:
-                "No, IEEE events are open to students from all fields and levels of experience. We encourage everyone to join!",
-            },
-            {
-              question: "Can I participate in multiple events at once?",
-              answer:
-                "Yes, you can participate in multiple events as long as there are no scheduling conflicts.",
-            },
-            {
-              question: "How can I volunteer for IEEE events?",
-              answer:
-                "Reach out to the HR Director, or keep an eye on volunteer opportunities posted on our website and social media.",
-            },
+           {
+            question: "What does IEEE stand for, and what is its purpose?",
+            answer:
+              "IEEE stands for the Institute of Electrical and Electronics Engineers. It is a global organization dedicated to advancing technology for the benefit of humanity. At Manipal University Jaipur (MUJ), IEEE serves as a vibrant student community that fosters innovation, technical learning, and professional development. Its purpose is to provide students with opportunities to enhance their knowledge through workshops, seminars, hackathons, and networking events, while also encouraging them to engage in collaborative projects and stay updated with the latest advancements in technology.",
+          },
+          {
+            question: "What benefits do I get as an IEEE member?",
+            answer:
+              "Being a part of IEEE provides numerous benefits, including access to IEEE Xplore, technical workshops, certifications, and exclusive networking opportunities with industry professionals and fellow tech enthusiasts. You can stay updated with the latest advancements in technology and gain practical skills through events and projects. Being an IEEE member always allows to grow in multiple ways. From attending workshops that sharpen technical skills to organizing events that boost leadership and teamwork abilities. It’s a platform that supports innovation, learning, and collaboration, helping members unlock their full potential.",
+          },
+          {
+            question: "How can I contribute to IEEE events and initiatives? & Can students from non-engineering backgrounds join IEEE?",
+            answer:
+              "You can contribute by volunteering to organize events, proposing innovative event ideas, participating in activities, collaborating on projects. Active participation will help both the organization and your professional growth. Yes, IEEE MUJ is open to students from all disciplines. IEEE MUJ recognizes and values the innovation that thrives when people from different backgrounds collaborate.",
+          },
+          {
+            question: "What kinds of events does IEEE organize?",
+            answer:
+              "IEEE offers students opportunities to expand their knowledge through workshops, seminars, hackathons, and networking events. It also encourages active participation in collaborative projects and helps them stay informed about the latest technological advancements.",
+          },
+          {
+            question: "How can I network with industry professionals through IEEE?",
+            answer:
+              "IEEE provides an excellent platform for networking with industry professionals and leveraging its vast alumni network. Many IEEE alumni are employed at top global companies such as Google, NVIDIA, and others, offering valuable opportunities to connect with experienced professionals. Additionally, IEEE regularly organizes seminars, workshops, and sessions featuring industry experts, enabling members to interact, gain insights, and build meaningful professional relationships. These initiatives help foster connections with leaders in various fields and create pathways for career growth and collaboration.",
+          },
+          
           ].map(({ question, answer }, idx) => (
             <motion.div
               key={idx}
