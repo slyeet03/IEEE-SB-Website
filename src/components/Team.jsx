@@ -10,7 +10,7 @@ const socialMediaIcons = {
   instagram: <FaInstagram />,
   twitter: <FaTwitter />,
   linkedin: <FaLinkedin />,
-  github: <FaGithub />, 
+  github: <FaGithub />,
 };
 
 const Team = () => {
@@ -193,21 +193,17 @@ const Team = () => {
           <div key={committee} className="mb-12">
             <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4">{committee.replace("EC", "Executive Committee").replace("CC", "Core Committee")}</h3>
             <hr className="my-4 border-gray-300 dark:border-gray-700" />
-            {members.length > 0 ? (
-              <FadeInStagger>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {members.map((person) => (
-                    <FadeIn key={`${person.name}-${person.position}`}>
-                      <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
-                        {renderImage(person.photo, person)}
-                      </div>
-                    </FadeIn>
-                  ))}
-                </div>
-              </FadeInStagger>
-            ) : (
-              <p className="text-lg text-gray-500 dark:text-gray-400">No team members found in this section.</p>
-            )}
+            <FadeInStagger>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {members.map((person) => (
+                  <FadeIn key={`${person.name}-${person.position}`}>
+                    <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
+                      {renderImage(person.photo, person)}
+                    </div>
+                  </FadeIn>
+                ))}
+              </div>
+            </FadeInStagger>
           </div>
         ))
       )}
