@@ -21,6 +21,7 @@ const Team = () => {
   const [error, setError] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [imageUrls, setImageUrls] = useState([]);
+  const [imagesLoaded, setImagesLoaded] = useState(0); // Track number of images loaded
 
   useEffect(() => {
     const fetchTeamData = async () => {
@@ -48,6 +49,7 @@ const Team = () => {
       .filter(Boolean);
 
     setImageUrls(selectedImages);
+    setImagesLoaded(0); // Reset loading state when tab or year changes
   }, [teamData, selectedTab]);
 
   // Preload images
@@ -61,6 +63,7 @@ const Team = () => {
     urls.forEach((url) => {
       const img = new Image();
       img.src = url;
+      img.onload = () => setImagesLoaded((prev) => prev + 1); // Increment loaded image count
     });
   };
 
@@ -181,7 +184,7 @@ const Team = () => {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      {loading ? (
+      {loading || imagesLoaded < imageUrls.length ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {[...Array(8)].map((_, index) => (
             <div key={index} className="h-80 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg" />
