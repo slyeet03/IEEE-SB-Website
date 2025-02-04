@@ -166,14 +166,6 @@ function App() {
             }
           />
           <Route
-            path="/achievements"
-            element={
-              <div className="pt-20">
-                <Achievements />
-              </div>
-            }
-          />
-          <Route
             path="/team"
             element={
               <div className="pt-20">

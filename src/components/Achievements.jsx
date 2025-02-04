@@ -95,46 +95,54 @@ const achievementsData = [
 
 const AchievementCard = ({ achievement }) => (
   <motion.div
-    className="group relative bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden p-4"
+    className="group relative bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden p-2 scale-90"
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ duration: 0.5 }}
-    whileHover={{ scale: 1.05 }}
+    transition={{ duration: 0.4 }}
+    whileHover={{ scale: 1.02 }}
   >
-    <div className="aspect-square overflow-hidden">
-      <img
-        src={achievement.image}
-        alt={achievement.label}
-        className="w-full h-full object-cover"
-      />
-    </div>
-    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
-      <p className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm">
-        {achievement.description}
-      </p>
-    </div>
-    <h3 className="text-center text-xl font-semibold text-gray-900 dark:text-white mt-2">
+    {achievement.image && (
+      <div className="relative w-full h-32 overflow-hidden rounded-md"> {/* Reduced height */}
+        <img
+          src={achievement.image}
+          alt={achievement.label || "Achievement Image"}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    )}
+    <h3 className="text-center text-sm font-medium text-gray-900 dark:text-white mt-1"> {/* Smaller font */}
       {achievement.label}
     </h3>
+    {achievement.description && (
+      <p className="text-center text-xs text-gray-600 dark:text-gray-300 mt-1"> {/* Smaller font */}
+        {achievement.description}
+      </p>
+    )}
   </motion.div>
 );
+
 
 AchievementCard.propTypes = {
   achievement: PropTypes.shape({
     id: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    image: PropTypes.string,
   }).isRequired,
 };
 
 function Achievements() {
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-900">
-      <BentoGrid items={achievementsData} />
+    <section className="py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
+      <div className="max-w-[1200px] mx-auto px-6">
+        <div className="max-w-[900px] ml-[-280px] mx-auto">
+          <BentoGrid items={achievementsData} />
+        </div>
+      </div>
     </section>
   );
 }
+
 
 export default Achievements;
