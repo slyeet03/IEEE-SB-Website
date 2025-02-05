@@ -2,17 +2,17 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
-import Events from "./components/Events";
+import Events from "./pages/Events";
 import Testimonials from "./components/Testimonials";
 import Achievements from "./components/Achievements";
 import BlogPosts from "./components/BlogPosts";
 import Footer from "./components/Footer";
-import Societies from "./components/Societies";
-import Contact from "./components/Contact";
+import Societies from "./pages/Societies";
+import Contact from "./pages/Contact";
 import PreEventPage from "./pages/PreEventPage";
 import PostEventPage from "./pages/PostEventPage";
-import Team from "./components/Team"
-import WebsiteTeam from "./components/WebsiteTeam"
+import Team from "./pages/Team"
+import WebsiteTeam from "./pages/WebsiteTeam"
 
 const events = [
   {
@@ -153,10 +153,6 @@ function App() {
                 <PostEventPage events={events} />
               </div>
             }
-          />
-          <Route
-            path="/blog"
-            element={<div className="pt-20">Blog Page</div>}
           />
           <Route
             path="/societies"

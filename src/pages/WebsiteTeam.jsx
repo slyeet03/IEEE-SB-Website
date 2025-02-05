@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { client } from "../../sanity";
-import { Container } from './Container';
-import { FadeIn, FadeInStagger } from './FadeIn';
+import { Container } from '../components/Container';
+import { FadeIn, FadeInStagger } from '../components/FadeIn';
 import { FaInstagram, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 
 const socialMediaIcons = {
@@ -22,9 +22,10 @@ const WebsiteTeam = () => {
   useEffect(() => {
     const fetchTeamData = async () => {
       setLoading(true);
-      const query = `*[_type == "team"] {
+      const query = `*[_type == "team" && isWebsiteTeam == "Yes"] {
         name, photo { asset -> { url } }, committee, position, socialMedia[] { platform, url }, isWebsiteTeam
       } | order(committee)`;
+               
       try {
         const data = await client.fetch(query);
         setTeamData(data);

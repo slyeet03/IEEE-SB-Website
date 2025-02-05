@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { client } from "../../sanity";
-import { Container } from './Container';
-import { FadeIn, FadeInStagger } from './FadeIn';
+import { Container } from '../components/Container';
+import { FadeIn, FadeInStagger } from '../components/FadeIn';
 import { FaInstagram, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { FiChevronDown } from 'react-icons/fi';
 
@@ -29,6 +29,7 @@ const Team = () => {
       const query = `*[_type == "team" && year == $year] {
         name, photo { asset -> { url } }, committee, position, socialMedia[] { platform, url }, society
       } | order(society, committee)`;
+
       try {
         const data = await client.fetch(query, { year });
         setTeamData(data);
@@ -38,17 +39,18 @@ const Team = () => {
         setLoading(false);
       }
     };
+
     fetchTeamData();
   }, [year, selectedTab]);
 
   useEffect(() => {
     const selectedImages = teamData
-      .filter((member) => member.committee === selectedTab || selectedTab === "All")
+      .filter((member) => member.committee === selectedTab || selectedTab === "All" || selectedTab === "Advisory")
       .map((member) => member.photo?.asset?.url)
       .filter(Boolean);
 
     setImageUrls(selectedImages);
-    setImagesLoaded(0); 
+    setImagesLoaded(0);
   }, [teamData, selectedTab]);
 
   useEffect(() => {
@@ -57,50 +59,60 @@ const Team = () => {
     }
   }, [imageUrls]);
 
-  const preloadImages = (urls) => {
-    urls.forEach((url) => {
+  const preloadImages = async (urls) => {
+    const loadPromises = urls.map((url) => new Promise((resolve) => {
       const img = new Image();
       img.src = url;
-      img.onload = () => setImagesLoaded((prev) => prev + 1);
-    });
+      img.onload = resolve;
+      img.onerror = resolve;
+    }));
+
+    await Promise.all(loadPromises);
+    setImagesLoaded(urls.length);
   };
 
   const groupedData = teamData.reduce((acc, member) => {
-    if (!acc[member.society]) acc[member.society] = { EC: [], CC: [] };
-    acc[member.society][member.committee].push(member);
+    if (!member.committee) return acc;
+
+    if (member.committee === "Advisory" || member.committee === "Faculty") {
+      acc["Advisory"] = acc["Advisory"] || { Faculty: [], Advisory: [] };
+      acc["Advisory"][member.committee].push(member);
+    } else {
+      if (!member.society) return acc;
+
+      acc[member.society] = acc[member.society] || { EC: [], CC: [] };
+      acc[member.society][member.committee] = acc[member.society][member.committee] || [];
+      acc[member.society][member.committee].push(member);
+    }
+
     return acc;
   }, {});
 
-  const renderImage = (photo, person) => { 
+  const renderImage = (photo, person) => {
     const imageUrl = photo?.asset?.url;
-    if (imageUrl) {
-      return (
-        <div className="relative h-80 w-full group">
+
+    return (
+      <div className="relative h-80 w-full group">
+        {imageUrl ? (
           <img
             src={imageUrl}
             alt="Team member"
             className="rounded-t-xl transition-transform duration-500 group-hover:scale-105"
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           />
-          <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-            <p className="text-lg font-semibold text-white">{person.name}</p>
-            <p className="text-sm text-gray-300">{person.position}</p>
-            <div className="flex space-x-3 mt-2">{renderSocialLinks(person.socialMedia)}</div>
+        ) : (
+          <div className="h-80 w-full bg-gray-300 dark:bg-gray-600 flex justify-center items-center group">
+            <span className="text-gray-500 dark:text-gray-200 text-lg">No Image</span>
           </div>
+        )}
+
+        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+          <p className="text-lg font-semibold text-white">{person.name}</p>
+          <p className="text-sm text-gray-300">{person.position}</p>
+          <div className="flex space-x-3 mt-2">{renderSocialLinks(person.socialMedia)}</div>
         </div>
-      );
-    } else {
-      return (
-        <div className="h-80 w-full bg-gray-300 dark:bg-gray-600 flex justify-center items-center group">
-          <span className="text-gray-500 dark:text-gray-200 text-lg">No Image</span>
-          <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-            <p className="text-lg font-semibold text-white">{person.name}</p>
-            <p className="text-sm text-gray-300">{person.position}</p>
-            <div className="flex space-x-3 mt-2">{renderSocialLinks(person.socialMedia)}</div>
-          </div>
-        </div>
-      );
-    }
+      </div>
+    );
   };
 
   const renderSocialLinks = (socialMedia) => (
@@ -113,7 +125,7 @@ const Team = () => {
       ) : null;
     })
   );
-  
+
   return (
     <Container className="mt-16 sm:mt-24 lg:mt-32 relative">
       <div className="text-center mt-8 mb-12">
@@ -189,13 +201,27 @@ const Team = () => {
           ))}
         </div>
       ) : (
-        Object.entries(groupedData[selectedTab] || {}).map(([committee, members]) => (
-          <div key={committee} className="mb-12">
-            <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4">{committee.replace("EC", "Executive Committee").replace("CC", "Core Committee")}</h3>
+        selectedTab === "Advisory" && groupedData["Advisory"] ? (
+          <div className="mb-12">
+            <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4">Faculty</h3>
             <hr className="my-4 border-gray-300 dark:border-gray-700" />
             <FadeInStagger>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {members.map((person) => (
+                {groupedData["Advisory"].Faculty.map((person) => (
+                  <FadeIn key={`${person.name}-${person.position}`}>
+                    <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
+                      {renderImage(person.photo, person)}
+                    </div>
+                  </FadeIn>
+                ))}
+              </div>
+            </FadeInStagger>
+
+            <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4 mt-8">Advisory</h3>
+            <hr className="my-4 border-gray-300 dark:border-gray-700" />
+            <FadeInStagger>
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {groupedData["Advisory"].Advisory.map((person) => (
                   <FadeIn key={`${person.name}-${person.position}`}>
                     <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
                       {renderImage(person.photo, person)}
@@ -205,7 +231,29 @@ const Team = () => {
               </div>
             </FadeInStagger>
           </div>
-        ))
+        ) : (
+          Object.entries(groupedData[selectedTab] || {}).map(([committee, members]) => (
+            Array.isArray(members) ? (
+              <div key={committee} className="mb-12">
+                <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4">{committee.replace("EC", "Executive Committee").replace("CC", "Core Committee")}</h3>
+                <hr className="my-4 border-gray-300 dark:border-gray-700" />
+                <FadeInStagger>
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {members.map((person) => (
+                      <FadeIn key={`${person.name}-${person.position}`}>
+                        <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
+                          {renderImage(person.photo, person)}
+                        </div>
+                      </FadeIn>
+                    ))}
+                  </div>
+                </FadeInStagger>
+              </div>
+            ) : (
+              <div key={committee} className="mb-12 text-red-500">Error: No members found for this committee.</div>
+            )
+          ))
+        )
       )}
     </Container>
   );

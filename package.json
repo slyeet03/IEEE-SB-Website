@@ -17,6 +17,7 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
+    "axios": "^1.7.9",
     "clsx": "^2.1.1",
     "fortawesome": "^0.0.1-security",
     "framer-motion": "^10.16.4",
@@ -30,7 +31,9 @@
     "react-parallax-tilt": "^1.7.273",
     "react-router-dom": "^6.18.0",
     "react-tsparticles": "^2.12.2",
-    "tsparticles": "^3.8.0"
+    "rss-parser": "^3.13.0",
+    "tsparticles": "^3.8.0",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
