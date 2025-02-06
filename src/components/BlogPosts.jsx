@@ -105,19 +105,23 @@ function BlogPosts() {
         </div>
 
         <div className="text-center mt-12">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 bg-ieee-blue text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors shadow-md"
-          >
-            More Blogs
-            <ArrowRight className="w-4 h-4" />
-          </motion.button>
+        <motion.a
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          href="https://medium.com/@ieeemuj"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 bg-ieee-blue text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors shadow-md"
+        >
+          More Blogs
+          <ArrowRight className="w-4 h-4" />
+        </motion.a>
+
         </div>
       </div>
     </section>
   )
 }
 
-export default BlogPosts
+export default BlogPosts;
 

@@ -12,7 +12,7 @@ export default function Navbar() {
   const navItems = [
     { name: "HOME", path: "/" },
     { name: "EVENTS", path: "/events" },
-    { name: "BLOG", path: "/blog" },
+    { name: "BLOG", path: "https://medium.com/@ieeemuj" },
     { name: "SOCIETIES", path: "/societies" },
     { name: "TEAM", path: "/team" },
     { name: "CONTACT", path: "/contact" },
