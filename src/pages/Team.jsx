@@ -98,8 +98,10 @@ const Team = () => {
             src={imageUrl}
             alt="Team member"
             className="rounded-t-xl transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           />
+       
         ) : (
           <div className="h-80 w-full bg-gray-300 dark:bg-gray-600 flex justify-center items-center group">
             <span className="text-gray-500 dark:text-gray-200 text-lg">No Image</span>

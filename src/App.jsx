@@ -116,7 +116,6 @@ const Home = () => (
   <>
     <Hero />
     <About />
-    <Events events={events} />
     <Testimonials />
     <BlogPosts />
     <Achievements />
@@ -131,29 +130,29 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
-            path="/events"
-            element={
-              <div className="pt-20">
-                <Events events={events} />
-              </div>
-            }
-          />
-          <Route
-            path="/events/pre/:id"
-            element={
-              <div className="pt-20">
-                <PreEventPage events={events} />
-              </div>
-            }
-          />
-          <Route
-            path="/events/post/:id"
-            element={
-              <div className="pt-20">
-                <PostEventPage events={events} />
-              </div>
-            }
-          />
+          path="/events"
+          element={
+            <div className="pt-20">
+              <Events />
+            </div>
+          }
+        />
+        <Route
+          path="/events/pre/:id"
+          element={
+            <div className="pt-20">
+              <PreEventPage />
+            </div>
+          }
+        />
+        <Route
+          path="/events/post/:id"
+          element={
+            <div className="pt-20">
+              <PostEventPage />
+            </div>
+          }
+        />
           <Route
             path="/societies"
             element={
