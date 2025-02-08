@@ -1,5 +1,5 @@
 import { motion, useTransform, useScroll } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "../../sanity";
 import { FiChevronDown } from "react-icons/fi";
@@ -8,49 +8,66 @@ const HorizontalScroll = () => {
   const [selectedYear, setSelectedYear] = useState(2025);
   const [events, setEvents] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const dropdownRef = useRef(null);
+
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await client.fetch(
+        `*[_type == "event"]{
+          _id, name, startDateTime, 
+          "imageUrl": poster.asset->url, 
+          formLink, society
+        }`
+      );
+
+      setEvents(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await client.fetch(
-          `*[_type == "event"]{
-            _id,
-            name,
-            startDateTime,
-            "imageUrl": poster.asset->url,
-            formLink,
-            society
-          }`
-        );
+    fetchData();
+  }, [fetchData]);
 
-        const filteredEvents = data
-          .filter(event => new Date(event.startDateTime).getFullYear() === selectedYear)
-          .sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
 
-        setEvents(filteredEvents);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  const filteredEvents = useMemo(() => {
+    return events
+      .filter((event) => new Date(event.startDateTime).getFullYear() === selectedYear)
+      .sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
+  }, [events, selectedYear]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
       }
     };
-    fetchData();
-  }, [selectedYear]);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const societies = ["ieee-sb", "ieee-cs", "ieee-wie"];
+  const societies = useMemo(() => ["ieee-sb", "ieee-cs", "ieee-wie"], []);
+  const hasEvents = filteredEvents.length > 0;
 
   return (
     <div className="bg-white dark:bg-ieee-dark p-4 scroll-smooth">
-      {/* Sorting Filters */}
       <div className="sticky top-0 bg-white dark:bg-ieee-dark z-20 py-4 mb-4">
         <div className="flex justify-end">
           <div className="flex items-center space-x-4">
             <span className="text-xl font-semibold text-ieee-blue dark:text-ieee-light">Year:</span>
-            <motion.div className="relative">
+            <motion.div className="relative dropdown-menu" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
                 className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
               >
                 <span className="font-medium text-sm">{selectedYear}</span>
-                <FiChevronDown className={`transition-transform ${dropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
+                <FiChevronDown className={`transition-transform ${dropdownOpen ? "rotate-180" : "rotate-0"}`} />
               </button>
 
               {dropdownOpen && (
@@ -80,25 +97,28 @@ const HorizontalScroll = () => {
         </div>
       </div>
 
-      {/* Horizontal Scroll Sections */}
-      {societies.map((society) => {
-        const societyEvents = events.filter(event => event.society === society);
-        return (
-          <div key={society} className="mb-4">
-            <div className="sticky top-20 bg-white dark:bg-ieee-dark z-10 py-4 text-left">
-              <h2 className="text-3xl font-semibold text-ieee-blue dark:text-ieee-light uppercase">
-                {society.replace("-", " ")}
-              </h2>
-              <hr className="border-gray-300 mt-1" />
-            </div>
-            {societyEvents.length > 0 ? (
+      {loading && <p className="text-center text-gray-500 mt-4 text-lg">Loading events...</p>}
+
+      {!loading && !hasEvents && (
+        <p className="text-center text-gray-500 mt-4 text-lg">No events found for {selectedYear}</p>
+      )}
+
+      {!loading &&
+        hasEvents &&
+        societies.map((society) => {
+          const societyEvents = filteredEvents.filter((event) => event.society === society);
+          return societyEvents.length > 0 ? (
+            <div key={society} className="mb-4">
+              <div className="sticky top-20 bg-white dark:bg-ieee-dark z-10 py-4 text-left">
+                <h2 className="text-3xl font-semibold text-ieee-blue dark:text-ieee-light uppercase">
+                  {society.replace("-", " ")}
+                </h2>
+                <hr className="border-gray-300 mt-1" />
+              </div>
               <HorizontalScrollCarousel events={societyEvents} />
-            ) : (
-              <p className="text-center text-gray-500 mt-2">No events found</p>
-            )}
-          </div>
-        );
-      })}
+            </div>
+          ) : null;
+        })}
     </div>
   );
 };
@@ -112,7 +132,7 @@ const HorizontalScrollCarousel = ({ events }) => {
     <section ref={targetRef} className="relative h-[180vh] bg-white dark:bg-ieee-dark">
       <div className="sticky top-24 flex h-screen items-center overflow-hidden">
         <motion.div style={{ x }} className="flex gap-5">
-          {events.slice(0, 7).map((event) => (
+          {events.map((event) => (
             <EventCard event={event} key={event._id} />
           ))}
         </motion.div>
@@ -136,23 +156,12 @@ const EventCard = ({ event }) => {
       onClick={handleClick}
       className="group relative h-[380px] w-[280px] sm:h-[420px] sm:w-[440px] overflow-hidden rounded-xl shadow-xl cursor-pointer transition-transform duration-300 hover:scale-110"
     >
-      {/* Background Image */}
       <div
-        style={{
-          backgroundImage: `url(${event.imageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        className="absolute inset-0 z-0"
+        className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
+        style={{ backgroundImage: `url(${event.imageUrl || "/fallback.jpg"})` }}
       ></div>
 
-      {/* Animated Hover Title */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileHover={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-      >
+      <motion.div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <p className="text-3xl sm:text-4xl font-bold uppercase text-white tracking-wide px-6 text-center drop-shadow-xl">
           {event.name}
         </p>
