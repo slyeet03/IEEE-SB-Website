@@ -52,7 +52,7 @@ const HorizontalScroll = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const societies = useMemo(() => ["ieee-sb", "ieee-cs", "ieee-wie"], []);
+  const societies = useMemo(() => ["genesis", "ieee-sb", "ieee-cs", "ieee-wie"], []);
   const hasEvents = filteredEvents.length > 0;
 
   return (

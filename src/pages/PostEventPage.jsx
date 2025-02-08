@@ -4,9 +4,41 @@ import { motion } from "framer-motion";
 import { client } from "../../sanity";
 import { Calendar, MapPin, Camera, Users, ArrowLeft } from "lucide-react";
 
+// Error Boundary Component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Something went wrong. Please try again later.
+          </h2>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 const PostEventPage = () => {
   const { id } = useParams();
   const [eventData, setEventData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
@@ -27,23 +59,37 @@ const PostEventPage = () => {
           category
         }`;
         const data = await client.fetch(query, { id });
+        if (!data) {
+          throw new Error("Event not found");
+        }
         setEventData(data);
       } catch (error) {
         console.error("Error fetching event data:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchEventData();
   }, [id]);
 
-  if (!eventData) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Loading event details...
-          </h2>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Loading event details...
+        </h2>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          {error}
+        </h2>
       </div>
     );
   }
@@ -61,14 +107,15 @@ const PostEventPage = () => {
         </Link>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-          {eventData.poster && (
-            <motion.div className="relative h-96" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          {/* Poster */}
+          {eventData?.poster && (
+            <div className="w-full h-64 overflow-hidden mb-8">
               <img
                 src={eventData.poster}
                 alt={`Event poster for ${eventData.name}`}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-t-lg" // Stretched horizontally
               />
-            </motion.div>
+            </div>
           )}
 
           <div className="p-6">
@@ -78,36 +125,60 @@ const PostEventPage = () => {
           </div>
 
           <div className="p-6 space-y-8">
+            {/* Event Details */}
             <div className="flex flex-wrap gap-6">
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <MapPin className="w-5 h-5 mr-2 text-green-500" />
-                <span>{eventData.mode}</span>
-              </div>
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <Calendar className="w-5 h-5 mr-2 text-green-500" />
-                <span>
-                  {new Date(eventData.startDateTime).toLocaleString()} - {new Date(eventData.endDateTime).toLocaleString()}
-                </span>
-              </div>
-              <div className="flex items-center text-gray-700 dark:text-gray-300">
-                <Users className="w-5 h-5 mr-2 text-green-500" />
-                <span>Team Size: {eventData.teamSize}</span>
-              </div>
+              {/* Mode */}
+              {eventData?.mode && (
+                <div className="flex items-center text-gray-700 dark:text-gray-300">
+                  <MapPin className="w-5 h-5 mr-2 text-green-500" />
+                  <span>{eventData.mode}</span>
+                </div>
+              )}
+
+              {/* Start and End Date */}
+              {eventData?.startDateTime && eventData?.endDateTime && (
+                <div className="flex items-center text-gray-700 dark:text-gray-300">
+                  <Calendar className="w-5 h-5 mr-2 text-green-500" />
+                  <span>
+                    {new Date(eventData.startDateTime).toLocaleString()} -{" "}
+                    {new Date(eventData.endDateTime).toLocaleString()}
+                  </span>
+                </div>
+              )}
+
+              {/* Team Size */}
+              {eventData?.teamSize && (
+                <div className="flex items-center text-gray-700 dark:text-gray-300">
+                  <Users className="w-5 h-5 mr-2 text-green-500" />
+                  <span>Team Size: {eventData.teamSize}</span>
+                </div>
+              )}
             </div>
 
             <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Event Overview</h2>
-              {eventData.description.split("\n").map((paragraph, index) => (
-                <p key={index} className="text-lg text-gray-600 dark:text-gray-400 mb-4">{paragraph}</p>
-              ))}
-            </div>
+            {/* Event Overview */}
+            {eventData?.description && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Event Overview
+                </h2>
+                {eventData.description.split("\n").map((paragraph, index) => (
+                  <p key={index} className="text-lg text-gray-600 dark:text-gray-400 mb-4">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            )}
 
             <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
+
+            {/* Event Gallery */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Event Gallery</h2>
-              {eventData.images && eventData.images.length > 0 ? (
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                Event Gallery
+              </h2>
+              {eventData?.images?.length > 0 ? (
                 <div className="grid grid-cols-4 gap-4">
                   {eventData.images.map((image, index) => (
                     <motion.div
@@ -133,7 +204,9 @@ const PostEventPage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-lg text-gray-600 dark:text-gray-400">No images available</p>
+                <p className="text-lg text-gray-600 dark:text-gray-400">
+                  No images available
+                </p>
               )}
             </div>
           </div>
@@ -143,4 +216,9 @@ const PostEventPage = () => {
   );
 };
 
-export default PostEventPage;
+// Wrap PostEventPage with ErrorBoundary
+export default () => (
+  <ErrorBoundary>
+    <PostEventPage />
+  </ErrorBoundary>
+);
