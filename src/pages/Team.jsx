@@ -59,18 +59,27 @@ const Team = () => {
     }
   }, [imageUrls]);
 
-  const preloadImages = async (urls) => {
-    const loadPromises = urls.map((url) => new Promise((resolve) => {
+  const preloadImages = (urls) => {
+    let loadedCount = 0;
+    
+    urls.forEach((url) => {
       const img = new Image();
       img.src = url;
-      img.onload = resolve;
-      img.onerror = resolve;
-    }));
-
-    await Promise.all(loadPromises);
-    setImagesLoaded(urls.length);
+      img.onload = () => {
+        loadedCount++;
+        if (loadedCount === urls.length) {
+          setImagesLoaded(loadedCount);
+        }
+      };
+      img.onerror = () => {
+        loadedCount++;
+        if (loadedCount === urls.length) {
+          setImagesLoaded(loadedCount);
+        }
+      };
+    });
   };
-
+  
   const groupedData = teamData.reduce((acc, member) => {
     if (!member.committee) return acc;
 
@@ -90,24 +99,24 @@ const Team = () => {
 
   const renderImage = (photo, person) => {
     const imageUrl = photo?.asset?.url;
-
+  
     return (
       <div className="relative h-80 w-full group">
         {imageUrl ? (
           <img
             src={imageUrl}
-            alt="Team member"
+            alt={`${person.name} - ${person.position}`}
             className="rounded-t-xl transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+            onError={(e) => (e.target.src = "/default-avatar.png")} // Add a default fallback image
           />
-       
         ) : (
-          <div className="h-80 w-full bg-gray-300 dark:bg-gray-600 flex justify-center items-center group">
+          <div className="h-80 w-full bg-gray-300 dark:bg-gray-600 flex justify-center items-center">
             <span className="text-gray-500 dark:text-gray-200 text-lg">No Image</span>
           </div>
         )}
-
+  
         <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
           <p className="text-lg font-semibold text-white">{person.name}</p>
           <p className="text-sm text-gray-300">{person.position}</p>
@@ -116,7 +125,7 @@ const Team = () => {
       </div>
     );
   };
-
+  
   const renderSocialLinks = (socialMedia) => (
     socialMedia?.map((social, index) => {
       const Icon = socialMediaIcons[social.platform.trim().toLowerCase()];
@@ -199,7 +208,9 @@ const Team = () => {
       {loading || imagesLoaded < imageUrls.length ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {[...Array(8)].map((_, index) => (
-            <div key={index} className="h-80 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg" />
+            <div key={index} className="h-80 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-300">
+              Loading...
+            </div>
           ))}
         </div>
       ) : (
