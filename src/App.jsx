@@ -4,9 +4,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Events from "./pages/Events";
-import Testimonials from "./components/Testimonials";
 import Achievements from "./components/Achievements";
-import BlogPosts from "./components/BlogPosts";
 import Footer from "./components/Footer";
 import Societies from "./pages/Societies";
 import Contact from "./pages/Contact";
@@ -17,12 +15,14 @@ import Team from "./pages/Team";
 import WebsiteTeam from "./pages/WebsiteTeam";
 import AnnualReport from "./pages/AnnualReport";
 import MemoriesGallery from "./components/MemoriesGallery";
+import SwipeCards from "./components/SwipeCards";
 
 const Home = () => (
   <>
     <Hero />
     <About />
     <MemoriesGallery />
+    <SwipeCards />
     <Achievements />
   </>
 );
@@ -30,7 +30,7 @@ const Home = () => (
 function App() {
   return (
     <Router>
-      <ScrollToTop /> {/* Add this here */}
+      <ScrollToTop />
       <main className="min-h-screen bg-white dark:bg-ieee-dark transition-colors duration-300">
         <Navbar />
         <Routes>

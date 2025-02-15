@@ -126,11 +126,16 @@ const HorizontalScroll = () => {
 const HorizontalScrollCarousel = ({ events }) => {
   const targetRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
-  const x = useTransform(scrollYProgress, [0, 1], ["5%", "-100%"]);
+
+  // Dynamically calculate how much to move before stopping
+  const totalCards = events.length;
+  const stopPercentage = totalCards > 2 ? "-80%" : "-50%"; // Stop earlier if fewer events
+
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", stopPercentage]);
 
   return (
-    <section ref={targetRef} className="relative h-[180vh] bg-white dark:bg-ieee-dark">
-      <div className="sticky top-24 flex h-screen items-center overflow-hidden">
+    <section ref={targetRef} className="relative h-[140vh] bg-white dark:bg-ieee-dark">
+      <div className="sticky top-16 flex h-screen items-center overflow-hidden">
         <motion.div style={{ x }} className="flex gap-5">
           {events.map((event) => (
             <EventCard event={event} key={event._id} />
@@ -140,6 +145,7 @@ const HorizontalScrollCarousel = ({ events }) => {
     </section>
   );
 };
+
 
 const EventCard = ({ event }) => {
   const navigate = useNavigate();

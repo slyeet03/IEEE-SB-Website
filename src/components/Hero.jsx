@@ -79,25 +79,27 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-wrap gap-4 justify-center">
-              <motion.button
+              <motion.a
                 className="bg-ieee-blue text-white px-5 py-3 sm:px-8 sm:py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-lg"
                 animate={glowAnimation}
                 transition={glowTransition}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                href="/events"
               >
                 Explore Events
-              </motion.button>
-
-              <motion.button
+              </motion.a>
+             
+              <motion.a
                 className="border-2 border-ieee-blue text-ieee-blue dark:border-white dark:text-white px-8 py-3 rounded-md hover:bg-ieee-blue hover:text-white dark:hover:bg-white dark:hover:text-ieee-dark transition-colors duration-200"
                 animate={glowAnimation}
                 transition={glowTransition}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                href="https://www.ieee.org/"
               >
                 Join IEEE
-              </motion.button>
+              </motion.a>
             </div>
 
             {/* People Section */}

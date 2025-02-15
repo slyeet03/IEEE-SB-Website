@@ -21,7 +21,7 @@ const Contact = () => {
               { name: "Krishnav Gupta", role: "General Secretary", phone: "+91 9811187903" },
               { name: "Shivam Shandilya", role: "Treasurer", phone: "+91 8918899791" },
               { name: "Ayana Takshak", role: "HR Director", phone: "+91 8949398854" },
-              { name: "Kunal Kumar", role: "Community Director", phone: "+91 8210165797" },
+              { name: "Ayush Agrawal", role: "Community Director", phone: "+91 8839763577" },
             ].map(({ name, role, phone }) => (
               <motion.div
                 key={name}
@@ -176,12 +176,13 @@ const Contact = () => {
             Be a part of a community that prepares you for college and beyond.
           </p>
         </div>
-        <motion.button
+        <motion.a
           className="py-3 px-6 bg-blue-500 text-white rounded-lg shadow-md transform transition-transform hover:scale-105"
           whileTap={{ scale: 0.95 }}
+          href="https://www.ieee.org/"
         >
           Join Now
-        </motion.button>
+        </motion.a>
       </div>
     </div>
   );

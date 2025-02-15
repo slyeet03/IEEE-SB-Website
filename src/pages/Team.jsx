@@ -101,15 +101,14 @@ const Team = () => {
     const imageUrl = photo?.asset?.url;
   
     return (
-      <div className="relative h-80 w-full group">
+      <div className="relative h-80 w-full">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={`${person.name} - ${person.position}`}
-            className="rounded-t-xl transition-transform duration-500 group-hover:scale-105"
+            className="rounded-t-xl object-cover w-full h-full"
             loading="lazy"
-            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-            onError={(e) => (e.target.src = "/default-avatar.png")} // Add a default fallback image
+            onError={(e) => (e.target.src = "/default-avatar.png")}
           />
         ) : (
           <div className="h-80 w-full bg-gray-300 dark:bg-gray-600 flex justify-center items-center">
@@ -117,7 +116,7 @@ const Team = () => {
           </div>
         )}
   
-        <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black to-transparent p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 rounded-b-xl">
           <p className="text-lg font-semibold text-white">{person.name}</p>
           <p className="text-sm text-gray-300">{person.position}</p>
           <div className="flex space-x-3 mt-2">{renderSocialLinks(person.socialMedia)}</div>
@@ -125,6 +124,8 @@ const Team = () => {
       </div>
     );
   };
+  
+  
   
   const renderSocialLinks = (socialMedia) => (
     socialMedia?.map((social, index) => {

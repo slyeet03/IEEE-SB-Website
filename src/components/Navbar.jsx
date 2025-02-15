@@ -52,7 +52,6 @@ export default function Navbar() {
       } border-b border-gray-300 dark:border-[#1E3A8A]`}
     >
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center h-full">
-        
         {/* LOGO */}
         <Link to="/" className="flex items-center gap-2">
           <motion.div
@@ -77,7 +76,7 @@ export default function Navbar() {
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <motion.div
-                  whileHover={{ scale: 1.1, rotate: -2 }}
+                  whileHover={{ scale: 1.05 }}
                   className="flex items-center gap-1 cursor-pointer text-lg font-semibold"
                 >
                   <span className="text-gray-700 hover:text-ieee-blue dark:text-gray-300 dark:hover:text-[#60A5FA]">
@@ -92,13 +91,13 @@ export default function Navbar() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2, ease: "easeInOut" }}
-                      className="absolute left-0 mt-2 w-40 bg-white dark:bg-[#0A1931] shadow-lg border border-gray-300 dark:border-[#1E3A8A] rounded-md overflow-hidden"
+                      className="absolute left-0 mt-2 w-48 bg-white dark:bg-[#0A1931] shadow-lg border border-gray-300 dark:border-[#1E3A8A] rounded-md overflow-hidden"
                     >
                       {item.submenu.map((sub) => (
                         <Link
                           key={sub.name}
                           to={sub.path}
-                          className="block px-4 py-2 text-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-[#1E3A8A] transition"
+                          className="block px-4 py-2 text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1E3A8A] transition"
                         >
                           {sub.name}
                         </Link>
@@ -109,7 +108,7 @@ export default function Navbar() {
               </div>
             ) : (
               <motion.div
-                whileHover={{ scale: 1.1, rotate: 1 }}
+                whileHover={{ scale: 1.05 }}
                 key={item.name}
               >
                 <Link
@@ -128,64 +127,100 @@ export default function Navbar() {
           {/* Dark Mode Toggle */}
           <motion.button
             onClick={() => setIsDark(!isDark)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-[#1E3A8A] transition"
+            aria-label="Toggle Dark Mode"
           >
             {isDark ? <Sun className="w-6 h-6 text-yellow-400" /> : <Moon className="w-6 h-6 text-[#0A1931]" />}
           </motion.button>
 
-          {/* Exploding Join Now Button */}
+          {/* Join Now Button */}
           <motion.a
             href="https://www.ieee.org/"
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1}}
-            whileTap={{ scale: 0.8, rotate: 5 }}
-            className="hidden md:block px-5 py-2 rounded-lg text-lg font-semibold shadow-md transition-all bg-ieee-blue text-white hover:bg-blue-700 hover:shadow-xl"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="hidden md:block px-5 py-2 rounded-lg text-lg font-semibold shadow-md transition-all bg-ieee-blue text-white hover:bg-blue-700 hover:shadow-lg"
           >
             JOIN NOW
           </motion.a>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden p-2" onClick={() => setIsOpen(!isOpen)}>
+          <motion.button
+            onClick={() => setIsOpen(!isOpen)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="md:hidden p-2"
+            aria-label="Toggle Menu"
+          >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          </motion.button>
         </div>
       </div>
 
       {/* Mobile Sidebar */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ x: "-100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "-100%", opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed top-0 left-0 w-64 h-full bg-white dark:bg-[#0A1931] shadow-lg p-5 backdrop-blur-md"
-          >
-            <button className="absolute top-4 right-4" onClick={() => setIsOpen(false)}>
-              <X className="w-6 h-6" />
-            </button>
-            <div className="flex flex-col gap-4 mt-10">
-              {menuItems.map((item) =>
-                item.submenu ? (
-                  <details key={item.name} className="group">
-                    <summary className="flex justify-between cursor-pointer text-lg font-semibold">{item.name}</summary>
-                    <div className="ml-4 mt-2 flex flex-col">
-                      {item.submenu.map((sub) => (
-                        <Link key={sub.name} to={sub.path} className="py-1">
-                          {sub.name}
-                        </Link>
-                      ))}
-                    </div>
-                  </details>
-                ) : (
-                  <Link key={item.name} to={item.path} className="text-lg font-semibold">
-                    {item.name}
-                  </Link>
-                )
-              )}
-            </div>
-          </motion.div>
+          <>
+            {/* Backdrop Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+              onClick={() => setIsOpen(false)}
+            />
+
+            {/* Sidebar */}
+            <motion.div
+              initial={{ x: "-100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="fixed top-0 left-0 w-64 h-full bg-white dark:bg-[#0A1931] shadow-lg p-5 z-50"
+            >
+              <button
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-[#1E3A8A] transition"
+                onClick={() => setIsOpen(false)}
+                aria-label="Close Menu"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <div className="flex flex-col gap-4 mt-10">
+                {menuItems.map((item) =>
+                  item.submenu ? (
+                    <details key={item.name} className="group">
+                      <summary className="flex justify-between cursor-pointer text-lg font-semibold">
+                        {item.name}
+                      </summary>
+                      <div className="ml-4 mt-2 flex flex-col gap-2">
+                        {item.submenu.map((sub) => (
+                          <Link
+                            key={sub.name}
+                            to={sub.path}
+                            className="py-1 text-gray-800 dark:text-gray-300 hover:text-ieee-blue dark:hover:text-[#60A5FA] transition"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </details>
+                  ) : (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className="text-lg font-semibold text-gray-800 dark:text-gray-300 hover:text-ieee-blue dark:hover:text-[#60A5FA] transition"
+                    >
+                      {item.name}
+                    </Link>
+                  )
+                )}
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>
