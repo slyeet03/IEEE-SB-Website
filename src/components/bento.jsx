@@ -1,3 +1,5 @@
+"use client";
+
 import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -17,21 +19,6 @@ export default function BentoGrid({ items }) {
     "col-span-2 row-span-1",
     "col-span-2 row-span-1",
   ];
-
-  const glowTransition = {
-    repeat: Number.POSITIVE_INFINITY,
-    repeatType: "reverse",
-    duration: 1,
-    ease: "easeInOut",
-  };
-
-  const glowAnimation = {
-    boxShadow: [
-      "0px 0px 10px rgba(0, 128, 255, 0.2)",
-      "0px 0px 20px rgba(0, 128, 255, 0.3)",
-      "0px 0px 10px rgba(0, 128, 255, 0.2)",
-    ],
-  };
 
   const [popup, setPopup] = useState({
     isOpen: false,
@@ -110,18 +97,17 @@ export default function BentoGrid({ items }) {
         )}
       </AnimatePresence>
 
-      <div className="flex-col md:grid md:grid-cols-4 md:grid-rows-5 gap-4 p-4 *:rounded-xl *:min-h-24 w-screen">
+      <div className="grid md:grid-cols-4 md:grid-rows-5 gap-4 md:max-w-[1200px] mx-auto">
         {items.map((item, index) =>
           index !== 7 ? (
             <motion.div
               key={item.id}
-              className={`bento-item h-auto flex items-center justify-center text-white text-lg font-bold ${disp[index]}`}
+              className={`bento-item min-h-[200px] md:min-h-[150px] flex items-center justify-center text-white text-lg font-bold rounded-xl ${disp[index]}`}
               style={{
                 backgroundImage: `url(${item.image})`,
                 backgroundSize: "cover",
+                backgroundPosition: "center",
               }}
-              animate={glowAnimation}
-              transition={glowTransition}
               whileHover={{ scale: 0.98 }}
               whileTap={{ scale: 0.95 }}
               onClick={() =>
@@ -129,13 +115,13 @@ export default function BentoGrid({ items }) {
               }
             >
               <div
-                className={`relative w-full rounded-xl h-full bottom-0 left-0 right-0 flex justify-center items-center ${
+                className={`relative w-full h-full flex justify-center items-center ${
                   index !== 7 ? "bg-black/60" : ""
                 } backdrop-blur-sm transition-all duration-300 hover:bg-black/40 ${
                   index !== 7
                     ? "dark:text-white text-white"
                     : "dark:text-white text-ieee-blue"
-                } text-xl p-2 rounded-b-md`}
+                } text-xl p-4 rounded-xl`}
               >
                 {item.label}
               </div>
@@ -143,9 +129,9 @@ export default function BentoGrid({ items }) {
           ) : (
             <div
               key={item.id}
-              className={`bento-item h-auto flex items-center justify-center text-white text-lg font-bold ${disp[index]}`}
+              className={`bento-item min-h-[200px] md:min-h-[150px] flex items-center justify-center text-ieee-blue text-3xl font-bold rounded-xl ${disp[index]}`}
             >
-              <motion.div className="relative rounded-xl w-full h-full bottom-0 left-0 right-0 flex justify-center items-center bg-opacity-60 text-ieee-blue text-3xl p-2 rounded-b-md">
+              <motion.div className="relative w-full h-full flex justify-center items-center p-4">
                 {item.label}
               </motion.div>
             </div>
@@ -162,7 +148,7 @@ BentoGrid.propTypes = {
       id: PropTypes.number.isRequired,
       label: PropTypes.string.isRequired,
       content: PropTypes.string.isRequired,
-      image: PropTypes.string.isRequired,
+      image: PropTypes.string,
     })
   ).isRequired,
 };

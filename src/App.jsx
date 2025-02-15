@@ -16,6 +16,7 @@ import WebsiteTeam from "./pages/WebsiteTeam";
 import AnnualReport from "./pages/AnnualReport";
 import MemoriesGallery from "./components/MemoriesGallery";
 import SwipeCards from "./components/SwipeCards";
+import AchievementsPage from "./pages/AchievementsPage";
 
 const Home = () => (
   <>
@@ -44,6 +45,7 @@ function App() {
           <Route path="/team" element={<div className="pt-20"><Team /></div>} />
           <Route path="/contact" element={<div className="pt-20"><Contact /></div>} />
           <Route path="/gallery" element={<div className="pt-20"><Gallery /></div>} />
+          <Route path="/achievements" element={<div className="pt-20"><AchievementsPage /></div>} />
         </Routes>
         <Footer />
       </main>

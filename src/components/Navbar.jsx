@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,6 +38,7 @@ export default function Navbar() {
           { name: "Events", path: "/events" },
           { name: "Gallery", path: "/gallery" },
           { name: "Blog", path: "https://medium.com/@ieeemuj" },
+          { name: "Achievements", path: "/achievements" },
         ],
       },
       { name: "Contact", path: "/contact" },
@@ -107,10 +110,7 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
             ) : (
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                key={item.name}
-              >
+              <motion.div whileHover={{ scale: 1.05 }} key={item.name}>
                 <Link
                   to={item.path}
                   className="text-lg font-semibold text-gray-700 dark:text-gray-300 hover:text-ieee-blue dark:hover:text-[#60A5FA] transition"
@@ -132,7 +132,11 @@ export default function Navbar() {
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-[#1E3A8A] transition"
             aria-label="Toggle Dark Mode"
           >
-            {isDark ? <Sun className="w-6 h-6 text-yellow-400" /> : <Moon className="w-6 h-6 text-[#0A1931]" />}
+            {isDark ? (
+              <Sun className="w-6 h-6 text-yellow-400" />
+            ) : (
+              <Moon className="w-6 h-6 text-[#0A1931]" />
+            )}
           </motion.button>
 
           {/* Join Now Button */}
