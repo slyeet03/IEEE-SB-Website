@@ -1,20 +1,7 @@
 import { Link } from "react-router-dom";
-import {
-  GitlabIcon as GitHub,
-  Instagram,
-  Linkedin,
-  Twitter,
-} from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Footer() {
-  const socialLinks = [
-    { icon: GitHub, href: "#", label: "GitHub" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-  ];
-
   const footerSections = [
     {
       title: "Quick Links",
@@ -30,17 +17,15 @@ export default function Footer() {
       links: [
         { name: "IEEE.org", href: "https://www.ieee.org" },
         { name: "IEEE Xplore", href: "https://ieeexplore.ieee.org" },
-        { name: "IEEE Standards", href: "#" },
-        { name: "IEEE Spectrum", href: "#" },
       ],
     },
     {
       title: "Contact",
       links: [
         { name: "Contact Us", href: "/contact" },
-        { name: "Join IEEE", href: "#" },
-        { name: "Newsletter", href: "#" },
-        { name: "FAQs", href: "#" },
+        { name: "Join IEEE", href: "https://www.ieee.org" },
+        { name: "Newsletter", href: "/blog" },
+        { name: "FAQs", href: "/contact" },
       ],
     },
   ];
@@ -62,20 +47,6 @@ export default function Footer() {
               Empowering innovation and fostering technological advancement
               through professional excellence and collaborative learning.
             </p>
-            <div className="mt-6 flex space-x-4">
-              {socialLinks.map((social) => (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="text-gray-400 hover:text-ieee-blue dark:hover:text-white transition-colors duration-200"
-                  aria-label={social.label}
-                >
-                  <social.icon className="h-6 w-6" />
-                </motion.a>
-              ))}
-            </div>
           </div>
 
           {footerSections.map((section) => (

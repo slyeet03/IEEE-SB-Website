@@ -127,9 +127,17 @@ const HorizontalScrollCarousel = ({ events }) => {
   const targetRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
 
-  // Dynamically calculate how much to move before stopping
   const totalCards = events.length;
-  const stopPercentage = totalCards > 2 ? "-80%" : "-50%"; // Stop earlier if fewer events
+
+
+  let stopPercentage;
+  if (totalCards === 1) {
+    stopPercentage = "0%"; 
+  } else if (totalCards === 2) {
+    stopPercentage = "-50%"; 
+  } else {
+    stopPercentage = "-80%"; 
+  }
 
   const x = useTransform(scrollYProgress, [0, 1], ["0%", stopPercentage]);
 

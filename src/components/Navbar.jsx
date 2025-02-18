@@ -30,6 +30,7 @@ export default function Navbar() {
           { name: "Team", path: "/team" },
           { name: "Societies", path: "/societies" },
           { name: "Annual Report", path: "/annual-report" },
+          { name: "Achievements", path: "/achievements" },
         ],
       },
       {
@@ -38,7 +39,6 @@ export default function Navbar() {
           { name: "Events", path: "/events" },
           { name: "Gallery", path: "/gallery" },
           { name: "Blog", path: "https://medium.com/@ieeemuj" },
-          { name: "Achievements", path: "/achievements" },
         ],
       },
       { name: "Contact", path: "/contact" },

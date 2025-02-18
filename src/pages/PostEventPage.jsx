@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { client } from "../../sanity";
-import { Calendar, MapPin, Camera, Users, ArrowLeft } from "lucide-react";
+import { Calendar, MapPin, Users, ArrowLeft, X } from "lucide-react";
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -29,7 +29,6 @@ class ErrorBoundary extends React.Component {
         </div>
       );
     }
-
     return this.props.children;
   }
 }
@@ -39,7 +38,7 @@ const PostEventPage = () => {
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeImage, setActiveImage] = useState(0);
+  const [activeImage, setActiveImage] = useState(null);
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -74,6 +73,8 @@ const PostEventPage = () => {
     fetchEventData();
   }, [id]);
 
+  const closeImageModal = useCallback(() => setActiveImage(null), []);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -97,6 +98,7 @@ const PostEventPage = () => {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Back Button */}
         <Link
           to="/events"
           className="inline-flex items-center text-ieee-blue dark:text-blue-400 hover:underline mb-8"
@@ -107,15 +109,21 @@ const PostEventPage = () => {
         </Link>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-          {/* Poster */}
+          {/* Event Poster */}
           {eventData?.poster && (
-            <div className="w-full h-64 overflow-hidden mb-8">
+            <motion.div
+              className="w-full h-72 overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               <img
                 src={eventData.poster}
                 alt={`Event poster for ${eventData.name}`}
-                className="w-full h-full object-cover rounded-t-lg" // Stretched horizontally
+                className="w-full h-full object-cover rounded-t-lg"
+                loading="lazy"
               />
-            </div>
+            </motion.div>
           )}
 
           <div className="p-6">
@@ -127,15 +135,12 @@ const PostEventPage = () => {
           <div className="p-6 space-y-8">
             {/* Event Details */}
             <div className="flex flex-wrap gap-6">
-              {/* Mode */}
               {eventData?.mode && (
                 <div className="flex items-center text-gray-700 dark:text-gray-300">
                   <MapPin className="w-5 h-5 mr-2 text-green-500" />
                   <span>{eventData.mode}</span>
                 </div>
               )}
-
-              {/* Start and End Date */}
               {eventData?.startDateTime && eventData?.endDateTime && (
                 <div className="flex items-center text-gray-700 dark:text-gray-300">
                   <Calendar className="w-5 h-5 mr-2 text-green-500" />
@@ -145,8 +150,6 @@ const PostEventPage = () => {
                   </span>
                 </div>
               )}
-
-              {/* Team Size */}
               {eventData?.teamSize && (
                 <div className="flex items-center text-gray-700 dark:text-gray-300">
                   <Users className="w-5 h-5 mr-2 text-green-500" />
@@ -174,49 +177,59 @@ const PostEventPage = () => {
             <hr className="my-6 border-t border-gray-200 dark:border-gray-700" />
 
             {/* Event Gallery */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                Event Gallery
-              </h2>
-              {eventData?.images?.length > 0 ? (
+            {eventData?.images?.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Event Gallery
+                </h2>
                 <div className="grid grid-cols-4 gap-4">
                   {eventData.images.map((image, index) => (
                     <motion.div
                       key={index}
-                      className={`rounded-lg overflow-hidden cursor-pointer ${
-                        index === activeImage ? "col-span-2 row-span-2" : ""
-                      }`}
+                      className="rounded-lg overflow-hidden cursor-pointer"
                       whileHover={{ scale: 1.05 }}
-                      onClick={() => setActiveImage(index)}
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          setActiveImage(index);
-                        }
-                      }}
+                      onClick={() => setActiveImage(image)}
                     >
                       <img
                         src={image}
                         alt={`Event highlight ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-32 object-cover"
+                        loading="lazy"
                       />
                     </motion.div>
                   ))}
                 </div>
-              ) : (
-                <p className="text-lg text-gray-600 dark:text-gray-400">
-                  No images available
-                </p>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Image Modal */}
+      <AnimatePresence>
+        {activeImage && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeImageModal}
+          >
+            <motion.img
+              src={activeImage}
+              className="max-w-3xl rounded-lg shadow-lg"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+            />
+            <X className="absolute top-5 right-5 w-8 h-8 text-white cursor-pointer" />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
-// Wrap PostEventPage with ErrorBoundary
 export default () => (
   <ErrorBoundary>
     <PostEventPage />
