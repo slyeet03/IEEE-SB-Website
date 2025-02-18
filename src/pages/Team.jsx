@@ -97,6 +97,45 @@ const Team = () => {
     return acc;
   }, {});
 
+  const sortECMembers = (members) => {
+    return members.sort((a, b) => {
+      const aPosition = a.position.toLowerCase();
+      const bPosition = b.position.toLowerCase();
+  
+      const getPositionRank = (position) => {
+        if (position.includes('chairperson') && !position.includes('vice')) return 1;
+        if (position.includes('vice')) return 2;
+        return 3;
+      };
+  
+      return getPositionRank(aPosition) - getPositionRank(bPosition);
+    });
+  };
+  
+
+  const sortCCMembers = (members) => {
+    const teamOrder = [
+      'technical', 'editorial', 'programs', 'coverage', 'promotions', 
+      'social media', 'graphic design', 'curations', 'corporate', 
+      'logistics', 'community'
+    ];
+
+    return members.sort((a, b) => {
+      const aTeam = teamOrder.findIndex(team => a.position.toLowerCase().includes(team));
+      const bTeam = teamOrder.findIndex(team => b.position.toLowerCase().includes(team));
+
+      if (aTeam !== bTeam) return aTeam - bTeam;
+
+      const aIsHead = a.position.toLowerCase().includes('head') && !a.position.toLowerCase().includes('senior');
+      const bIsHead = b.position.toLowerCase().includes('head') && !b.position.toLowerCase().includes('joint');
+
+      if (aIsHead && !bIsHead) return -1;
+      if (!aIsHead && bIsHead) return 1;
+
+      return 0;
+    });
+  };
+
   const renderImage = (photo, person) => {
     const imageUrl = photo?.asset?.url;
   
@@ -125,8 +164,6 @@ const Team = () => {
     );
   };
   
-  
-  
   const renderSocialLinks = (socialMedia) => (
     socialMedia?.map((social, index) => {
       const Icon = socialMediaIcons[social.platform.trim().toLowerCase()];
@@ -139,7 +176,7 @@ const Team = () => {
   );
 
   return (
-    <Container className="mt-16 sm:mt-24 lg:mt-32 relative">
+    <Container className="mt-16 sm:mt-24 lg:mt-32 relative mb-12">
       <div className="text-center mt-8 mb-12">
         <h1 className="text-5xl font-bold text-ieee-blue dark:text-ieee-light">Meet Our Team</h1>
         <p className="mt-4 text-xl text-gray-600 dark:text-gray-400">
@@ -253,7 +290,7 @@ const Team = () => {
                 <hr className="my-4 border-gray-300 dark:border-gray-700" />
                 <FadeInStagger>
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {members.map((person) => (
+                    {(committee === "EC" ? sortECMembers(members) : sortCCMembers(members)).map((person) => (
                       <FadeIn key={`${person.name}-${person.position}`}>
                         <div className="group relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300">
                           {renderImage(person.photo, person)}

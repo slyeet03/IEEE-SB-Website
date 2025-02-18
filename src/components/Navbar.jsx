@@ -56,17 +56,28 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center h-full">
         {/* LOGO */}
-        <Link to="/" className="flex items-center gap-2">
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.1, rotate: 3 }}
-            transition={{ duration: 0.3 }}
-            className="text-2xl font-extrabold tracking-wide text-ieee-blue dark:text-ieee-light"
-          >
-            IEEE SB MUJ
-          </motion.div>
-        </Link>
+<Link to="/" className="flex items-center gap-2">
+  <motion.img
+    src="https://cdn.sanity.io/images/gcb0j4e6/production/bce1d61c26cf99fb80ef126cda5fbc34e0c39780-287x84.png"
+    alt="IEEE SB MUJ Logo"
+    className="h-8 sm:h-10 object-contain block dark:hidden" // Light mode logo
+    initial={{ opacity: 0, y: -10 }}
+    animate={{ opacity: 1, y: 0 }}
+    whileHover={{ scale: 1.05, rotate: 2 }}
+    transition={{ duration: 0.3 }}
+  />
+  <motion.img
+    src="https://cdn.sanity.io/images/gcb0j4e6/production/e1a5d687d5c7eb204054dd282a8c57d1ee7f4c61-287x84.png"
+    alt="IEEE SB MUJ Dark Logo"
+    className="h-8 sm:h-10 object-contain hidden dark:block" // Dark mode logo
+    initial={{ opacity: 0, y: -10 }}
+    animate={{ opacity: 1, y: 0 }}
+    whileHover={{ scale: 1.05, rotate: 2 }}
+    transition={{ duration: 0.3 }}
+  />
+</Link>
+
+
 
         {/* NAV LINKS (Desktop) */}
         <div className="hidden md:flex space-x-6">

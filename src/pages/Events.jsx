@@ -1,4 +1,3 @@
-// Events.jsx
 import React from "react";
 import HorizontalScroll from "../components/HorizontalScroll";
 import SwipeCards from "../components/SwipeCards";

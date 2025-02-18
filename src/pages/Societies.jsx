@@ -1,7 +1,4 @@
 import React from "react";
-import ieeecs from "../assets/ieeecs.png";
-import ieeewie from "../assets/ieeewie.png";
-import ieeecis from "../assets/ieeecis.png";
 
 const Societies = () => {
   const societies = [
@@ -12,7 +9,10 @@ const Societies = () => {
         `With an intent to expand the IEEE’s reach and learnings, this society was started a year back in early 2020. Since then, society has tried every possible course of action by conducting diverse events such as webinars, competitions, workshops, and mentorship programs to set a goal for the young achievers.`,
         `We aim to proactively support diversity and inclusion by being the premier source for information, inspiration, and collaboration in computer science and engineering. Connecting members on campus, this IEEE Computer Society empowers the students who wish to advance in technology by delivering tools at all stages of their professional careers.`,
       ],
-      image: ieeecs,
+      lightImage:
+        "https://cdn.sanity.io/images/gcb0j4e6/production/edd196ff7ee299f2b7f74ce9d4ae7207040c6ea4-3120x955.png",
+      darkImage:
+        "https://cdn.sanity.io/images/gcb0j4e6/production/458be942a4d281485d8d5ba3fb32a5e0baa2ffe8-1559x628.png",
     },
     {
       name: "IEEE Women in Engineering",
@@ -21,7 +21,9 @@ const Societies = () => {
         `IEEE-WIE MUJ Student Branch started in 2018 and has left no stone unturned in providing a platform where women can share ideas and collaborate. We seek to maintain a healthy and warm ambience for young women to discuss opinions, practice leadership, and hone their skills by hosting numerous webinars, workshops, competitions, and internships.`,
         `We strive to recognize the outstanding achievements of women and organize receptions at major technical conferences to enhance networking and promote membership at WIE. IEEE-WIE MUJ pledges to work towards gender-diversified panels at all IEEE conferences and events.`,
       ],
-      image: ieeewie,
+      lightImage:
+        "https://cdn.sanity.io/images/gcb0j4e6/production/0de15fff7a0e79bee1004894081f4a6b30b411a9-1000x1000.png",
+      darkImage: "https://cdn.sanity.io/images/gcb0j4e6/production/0de15fff7a0e79bee1004894081f4a6b30b411a9-1000x1000.png",
     },
     {
       name: "IEEE Computational Intelligence Society",
@@ -30,7 +32,10 @@ const Societies = () => {
         `Over the decades, the Society has evolved from the Neural Network Council to the Neural Network Society, and finally, to the Computational Intelligence Society, reflecting the growing diversity and impact of its core technologies.`,
         `IEEE CIS fosters research and development in computational intelligence by offering a platform for innovation, collaboration, and dissemination of knowledge. Its methods are applied to some of the most complex challenges of our time, from optimizing power systems to dynamic analysis in sensor networks.`,
       ],
-      image: ieeecis,
+      lightImage:
+        "https://cdn.sanity.io/images/gcb0j4e6/production/5dffca4477ffc49c878df5cbb14c105f7114c72e-942x348.png",
+      darkImage:
+        "https://cdn.sanity.io/images/gcb0j4e6/production/d09cd5ee4c7c92139be9eb4ca915129317762012-942x348.png",
     },
   ];
 
@@ -49,12 +54,19 @@ const Societies = () => {
           >
             {/* Image Container */}
             <div className="w-full max-w-md lg:max-w-sm">
-              <div className="dark:bg-gray-800 dark:p-4 dark:rounded-lg">
+              <div>
                 <img
-                  src={society.image}
+                  src={society.lightImage}
                   alt={society.name}
-                  className="rounded-lg w-full"
+                  className="rounded-lg w-full dark:hidden"
                 />
+                {society.darkImage && (
+                  <img
+                    src={society.darkImage}
+                    alt={`${society.name} (Dark Mode)`}
+                    className="rounded-lg w-full hidden dark:block"
+                  />
+                )}
               </div>
             </div>
 
