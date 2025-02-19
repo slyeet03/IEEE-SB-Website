@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { client } from "../../sanity";
 import { Container } from '../components/Container';
@@ -7,15 +7,12 @@ import { FaInstagram, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { FiChevronDown } from 'react-icons/fi';
 import imageUrlBuilder from '@sanity/image-url';
 
-
 const builder = imageUrlBuilder(client);
-
 
 const urlFor = (source) => {
   if (!source || !source.asset) return null;
   return builder.image(source).width(400).height(400).auto('format').fit('max').url();
 };
-
 
 const socialMediaIcons = {
   instagram: <FaInstagram />,
@@ -34,6 +31,21 @@ const Team = () => {
   const [imageUrls, setImageUrls] = useState([]);
   const [imagesLoaded, setImagesLoaded] = useState(0);
 
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Fetch team data
   useEffect(() => {
     const fetchTeamData = async () => {
       setLoading(true);
@@ -54,12 +66,13 @@ const Team = () => {
     fetchTeamData();
   }, [year, selectedTab]);
 
+  // Preload images
   useEffect(() => {
     const selectedImages = teamData
       .filter((member) => member.committee === selectedTab || selectedTab === "All" || selectedTab === "Advisory")
-      .map((member) => (member.photo ? urlFor(member.photo) : null)) 
-      .filter(Boolean); 
-  
+      .map((member) => (member.photo ? urlFor(member.photo) : null))
+      .filter(Boolean);
+
     setImageUrls(selectedImages);
     setImagesLoaded(0);
   }, [teamData, selectedTab]);
@@ -72,7 +85,7 @@ const Team = () => {
 
   const preloadImages = (urls) => {
     let loadedCount = 0;
-    
+
     urls.forEach((url) => {
       const img = new Image();
       img.src = url;
@@ -90,7 +103,8 @@ const Team = () => {
       };
     });
   };
-  
+
+  // Group data by committee
   const groupedData = teamData.reduce((acc, member) => {
     if (!member.committee) return acc;
 
@@ -108,26 +122,26 @@ const Team = () => {
     return acc;
   }, {});
 
+  // Sort members
   const sortECMembers = (members) => {
     return members.sort((a, b) => {
       const aPosition = a.position.toLowerCase();
       const bPosition = b.position.toLowerCase();
-  
+
       const getPositionRank = (position) => {
         if (position.includes('chairperson') && !position.includes('vice')) return 1;
         if (position.includes('vice')) return 2;
         return 3;
       };
-  
+
       return getPositionRank(aPosition) - getPositionRank(bPosition);
     });
   };
-  
 
   const sortCCMembers = (members) => {
     const teamOrder = [
-      'technical', 'editorial', 'programs', 'coverage', 'promotions', 
-      'social media', 'graphic design', 'curations', 'corporate', 
+      'technical', 'editorial', 'programs', 'coverage', 'promotions',
+      'social media', 'graphic design', 'curations', 'corporate',
       'logistics', 'community'
     ];
 
@@ -147,9 +161,10 @@ const Team = () => {
     });
   };
 
+  // Render image with social links
   const renderImage = (photo, person) => {
     const imageUrl = photo ? urlFor(photo) : null;
-  
+
     return (
       <div className="relative h-80 w-full">
         {imageUrl ? (
@@ -165,7 +180,7 @@ const Team = () => {
             <span className="text-gray-500 dark:text-gray-200 text-lg">No Image</span>
           </div>
         )}
-  
+
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4 rounded-b-xl">
           <p className="text-lg font-semibold text-white">{person.name}</p>
           <p className="text-sm text-gray-300">{person.position}</p>
@@ -174,17 +189,32 @@ const Team = () => {
       </div>
     );
   };
-  
+
   const renderSocialLinks = (socialMedia) => (
     socialMedia?.map((social, index) => {
       const Icon = socialMediaIcons[social.platform.trim().toLowerCase()];
       return Icon ? (
-        <a key={index} href={social.url} target="_blank" rel="noopener noreferrer" className="text-xl text-ieee-blue hover:text-gray-400 dark:hover:text-gray-200 transition-all duration-300">
+        <a
+          key={index}
+          href={social.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xl text-ieee-blue hover:text-gray-400 dark:hover:text-gray-200 transition-all duration-300"
+          aria-label={`${social.platform} profile`}
+        >
           {Icon}
         </a>
       ) : null;
     })
   );
+
+  // Scroll to selected tab
+  const scrollToSection = (tab) => {
+    const section = document.getElementById(tab);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <Container className="mt-16 sm:mt-24 lg:mt-32 relative mb-12">
@@ -204,10 +234,12 @@ const Team = () => {
       <div className="flex justify-between mb-8">
         <div className="flex items-center space-x-4">
           <span className="text-xl font-semibold text-ieee-blue dark:text-ieee-light">Year:</span>
-          <motion.div className="relative">
+          <motion.div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((prev) => !prev)}
               className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              aria-expanded={dropdownOpen}
+              aria-haspopup="true"
             >
               <span className="font-medium text-sm">{year}</span>
               <FiChevronDown className={`transition-transform ${dropdownOpen ? 'rotate-180' : 'rotate-0'}`} />
@@ -220,6 +252,7 @@ const Team = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
                 className="absolute bg-white dark:bg-gray-800 shadow-xl rounded-md w-32 mt-2 z-10"
+                role="menu"
               >
                 {["2022", "2023", "2024"].map((yr) => (
                   <motion.li
@@ -228,7 +261,8 @@ const Team = () => {
                       setYear(yr);
                       setDropdownOpen(false);
                     }}
-                    className="px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                    className="px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+                    role="menuitem"
                   >
                     {yr}
                   </motion.li>
@@ -242,9 +276,17 @@ const Team = () => {
           {["Advisory", "IEEE SB", "IEEE CS", "IEEE WIE"].map((tab) => (
             <motion.button
               key={tab}
-              onClick={() => setSelectedTab(tab)}
-              className={`px-4 py-2 rounded-lg font-semibold ${selectedTab === tab ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'} transition-all duration-300`}
+              onClick={() => {
+                setSelectedTab(tab);
+                scrollToSection(tab);
+              }}
+              className={`px-4 py-2 rounded-lg font-semibold ${
+                selectedTab === tab
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+              } transition-all duration-300`}
               whileHover={{ scale: 1.05 }}
+              aria-current={selectedTab === tab ? 'page' : undefined}
             >
               {tab}
             </motion.button>
@@ -264,7 +306,7 @@ const Team = () => {
         </div>
       ) : (
         selectedTab === "Advisory" && groupedData["Advisory"] ? (
-          <div className="mb-12">
+          <div className="mb-12" id="Advisory">
             <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4">Faculty</h3>
             <hr className="my-4 border-gray-300 dark:border-gray-700" />
             <FadeInStagger>
@@ -296,8 +338,10 @@ const Team = () => {
         ) : (
           Object.entries(groupedData[selectedTab] || {}).map(([committee, members]) => (
             Array.isArray(members) ? (
-              <div key={committee} className="mb-12">
-                <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4">{committee.replace("EC", "Executive Committee").replace("CC", "Core Committee")}</h3>
+              <div key={committee} className="mb-12" id={committee}>
+                <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light mb-4">
+                  {committee.replace("EC", "Executive Committee").replace("CC", "Core Committee")}
+                </h3>
                 <hr className="my-4 border-gray-300 dark:border-gray-700" />
                 <FadeInStagger>
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
