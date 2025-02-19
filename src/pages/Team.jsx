@@ -5,6 +5,17 @@ import { Container } from '../components/Container';
 import { FadeIn, FadeInStagger } from '../components/FadeIn';
 import { FaInstagram, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { FiChevronDown } from 'react-icons/fi';
+import imageUrlBuilder from '@sanity/image-url';
+
+
+const builder = imageUrlBuilder(client);
+
+
+const urlFor = (source) => {
+  if (!source || !source.asset) return null;
+  return builder.image(source).width(400).height(400).auto('format').fit('max').url();
+};
+
 
 const socialMediaIcons = {
   instagram: <FaInstagram />,
@@ -46,9 +57,9 @@ const Team = () => {
   useEffect(() => {
     const selectedImages = teamData
       .filter((member) => member.committee === selectedTab || selectedTab === "All" || selectedTab === "Advisory")
-      .map((member) => member.photo?.asset?.url)
-      .filter(Boolean);
-
+      .map((member) => (member.photo ? urlFor(member.photo) : null)) 
+      .filter(Boolean); 
+  
     setImageUrls(selectedImages);
     setImagesLoaded(0);
   }, [teamData, selectedTab]);
@@ -137,7 +148,7 @@ const Team = () => {
   };
 
   const renderImage = (photo, person) => {
-    const imageUrl = photo?.asset?.url;
+    const imageUrl = photo ? urlFor(photo) : null;
   
     return (
       <div className="relative h-80 w-full">

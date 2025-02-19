@@ -281,9 +281,10 @@ const PreEventPage = () => {
   );
 };
 
-// Wrap PreEventPage with ErrorBoundary
-export default () => (
+const WrappedPreEventPage = () => (
   <ErrorBoundary>
     <PreEventPage />
   </ErrorBoundary>
 );
+
+export default WrappedPreEventPage;

@@ -230,8 +230,10 @@ const PostEventPage = () => {
   );
 };
 
-export default () => (
+const WrappedPostEventPage = () => (
   <ErrorBoundary>
     <PostEventPage />
   </ErrorBoundary>
 );
+
+export default WrappedPostEventPage;
