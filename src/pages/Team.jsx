@@ -33,7 +33,7 @@ const Team = () => {
 
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -104,7 +104,7 @@ const Team = () => {
     });
   };
 
-  // Group data by committee
+
   const groupedData = teamData.reduce((acc, member) => {
     if (!member.committee) return acc;
 
@@ -161,7 +161,6 @@ const Team = () => {
     });
   };
 
-  // Render image with social links
   const renderImage = (photo, person) => {
     const imageUrl = photo ? urlFor(photo) : null;
 

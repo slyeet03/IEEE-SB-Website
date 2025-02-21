@@ -3,6 +3,13 @@ import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "../../sanity";
 import { FiChevronDown } from "react-icons/fi";
+import imageUrlBuilder from "@sanity/image-url";
+
+const builder = imageUrlBuilder(client);
+
+function urlFor(source) {
+  return builder.image(source);
+}
 
 const HorizontalScroll = () => {
   const [selectedYear, setSelectedYear] = useState(2025);
@@ -10,7 +17,6 @@ const HorizontalScroll = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef(null);
-
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -34,7 +40,6 @@ const HorizontalScroll = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
 
   const filteredEvents = useMemo(() => {
     return events
@@ -78,7 +83,7 @@ const HorizontalScroll = () => {
                   transition={{ duration: 0.2 }}
                   className="absolute bg-white dark:bg-gray-800 shadow-xl rounded-md w-32 mt-2 z-10"
                 >
-                  {[2021, 2022, 2023, 2024, 2025].map((year) => (
+                  {[2022, 2023, 2024, 2025].map((year) => (
                     <motion.li
                       key={year}
                       onClick={() => {
@@ -129,7 +134,6 @@ const HorizontalScrollCarousel = ({ events }) => {
 
   const totalCards = events.length;
 
-
   let stopPercentage;
   if (totalCards === 1) {
     stopPercentage = "0%"; 
@@ -144,7 +148,10 @@ const HorizontalScrollCarousel = ({ events }) => {
   return (
     <section ref={targetRef} className="relative h-[140vh] bg-white dark:bg-ieee-dark">
       <div className="sticky top-16 flex h-screen items-center overflow-hidden">
-        <motion.div style={{ x }} className="flex gap-5">
+        <motion.div
+          style={{ x }}
+          className="flex gap-5 will-change-transform"
+        >
           {events.map((event) => (
             <EventCard event={event} key={event._id} />
           ))}
@@ -153,7 +160,6 @@ const HorizontalScrollCarousel = ({ events }) => {
     </section>
   );
 };
-
 
 const EventCard = ({ event }) => {
   const navigate = useNavigate();
@@ -165,14 +171,17 @@ const EventCard = ({ event }) => {
     navigate(route);
   };
 
+  // Use Sanity's image URL builder to optimize the image
+  const optimizedImageUrl = urlFor(event.imageUrl).width(440).height(420).auto('format').url();
+
   return (
     <div
       onClick={handleClick}
-      className="group relative h-[380px] w-[280px] sm:h-[420px] sm:w-[440px] overflow-hidden rounded-xl shadow-xl cursor-pointer transition-transform duration-300 hover:scale-110"
+      className="group relative h-[380px] w-[280px] sm:h-[420px] sm:w-[440px] overflow-hidden rounded-xl shadow-xl cursor-pointer transition-transform duration-300 hover:scale-110 will-change-transform"
     >
       <div
         className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: `url(${event.imageUrl || "/fallback.jpg"})` }}
+        style={{ backgroundImage: `url(${optimizedImageUrl || "/fallback.jpg"})` }}
       ></div>
 
       <motion.div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">

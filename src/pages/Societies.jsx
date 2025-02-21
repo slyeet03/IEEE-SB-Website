@@ -3,6 +3,18 @@ import React from "react";
 const Societies = () => {
   const societies = [
     {
+      name: "IEEE Student Branch",
+      description: [
+        `"Empowering Innovation, Inspiring Excellence" – this is the guiding vision of IEEE Student Branch, Manipal University Jaipur. Our branch is a dynamic community of passionate individuals dedicated to fostering awareness and proficiency in the ever-evolving world of technology. With the steadfast support of our esteemed faculty mentors, we strive to push boundaries, enhance our skills, and evolve into future-ready engineers.`,
+        `Established with the goal of enriching technical knowledge and professional development, IEEE SB MUJ has consistently provided a platform for students to explore, innovate, and grow. Through diverse initiatives, including workshops, hackathons, expert talks, and collaborative projects, we bridge the gap between academia and industry, ensuring our members gain practical exposure and hands-on experience.`,
+        `As the largest technical professional organization at Manipal University Jaipur, our mission is to harness the power of technology and education to drive impactful change. By nurturing a culture of research, learning, and teamwork, we aim to create an ecosystem where aspiring technologists can thrive, contribute, and lead in shaping the future of engineering and innovation.`,
+      ],
+      lightImage:
+        "https://cdn.sanity.io/images/gcb0j4e6/production/092b293692686480e83aac9316168fbfd142e588-344x194.png",
+      darkImage:
+        "https://cdn.sanity.io/images/gcb0j4e6/production/b34ec0b0932ccb66e8bf4c16a473392f27e420a7-344x194.png",
+    },
+    {
       name: "IEEE Computer Society",
       description: [
         `“Serving computing at its best with inclusion and diversity” is the prime motto of the IEEE Computer Society. This society was created keeping in mind IEEE’s continued commitment to providing options at best. The IEEE Computer Society is driven by the central goals of equity, diversity, inclusion, and yearn to serve computing at its perfection.`,
@@ -52,25 +64,27 @@ const Societies = () => {
               index % 2 === 1 ? "lg:flex-row-reverse" : ""
             }`}
           >
-            {/* Image Container */}
             <div className="w-full max-w-md lg:max-w-sm">
               <div>
+              <img
+                src={society.lightImage}
+                alt={society.name}
+                className={`rounded-lg w-full dark:hidden ${
+                  society.name === "IEEE Student Branch" ? "max-w-[300px] mx-auto" : ""
+                }`}
+              />
+              {society.darkImage && (
                 <img
-                  src={society.lightImage}
-                  alt={society.name}
-                  className="rounded-lg w-full dark:hidden"
-                />
-                {society.darkImage && (
-                  <img
-                    src={society.darkImage}
-                    alt={`${society.name} (Dark Mode)`}
-                    className="rounded-lg w-full hidden dark:block"
-                  />
-                )}
+                  src={society.darkImage}
+                  alt={`${society.name} (Dark Mode)`}
+                  className={`rounded-lg w-full hidden dark:block ${
+                    society.name === "IEEE Student Branch" ? "max-w-[300px] mx-auto" : ""
+                  }`}
+              />
+              )}
               </div>
             </div>
 
-            {/* Content */}
             <div className="flex-grow space-y-6">
               <h2 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light">
                 {society.name}
