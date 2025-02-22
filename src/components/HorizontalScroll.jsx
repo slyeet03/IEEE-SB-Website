@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { client } from "../../sanity";
 import { FiChevronDown } from "react-icons/fi";
 import imageUrlBuilder from "@sanity/image-url";
+import { FaCalendarAlt, FaUsers, FaTrophy } from "react-icons/fa";
+import CountUp from "react-countup";
 
 const builder = imageUrlBuilder(client);
 
@@ -25,7 +27,7 @@ const HorizontalScroll = () => {
         `*[_type == "event"]{
           _id, name, startDateTime, 
           "imageUrl": poster.asset->url, 
-          formLink, society
+          formLink, society, teamSize, prizePool
         }`
       );
 
@@ -61,7 +63,8 @@ const HorizontalScroll = () => {
   const hasEvents = filteredEvents.length > 0;
 
   return (
-    <div className="bg-white dark:bg-ieee-dark p-4 scroll-smooth">
+    <div className="bg-gradient-to-b from-white to-gray-100 dark:from-ieee-dark dark:to-gray-900 p-4 scroll-smooth">
+      {/* Sticky Navbar */}
       <div className="sticky top-0 bg-white dark:bg-ieee-dark z-20 py-4 mb-4">
         <div className="flex justify-end">
           <div className="flex items-center space-x-4">
@@ -69,7 +72,8 @@ const HorizontalScroll = () => {
             <motion.div className="relative dropdown-menu" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-white/80 dark:bg-gray-700/80 backdrop-blur-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200/80 dark:hover:bg-gray-600/80 transition-colors"
+                aria-label="Select Year"
               >
                 <span className="font-medium text-sm">{selectedYear}</span>
                 <FiChevronDown className={`transition-transform ${dropdownOpen ? "rotate-180" : "rotate-0"}`} />
@@ -81,7 +85,7 @@ const HorizontalScroll = () => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute bg-white dark:bg-gray-800 shadow-xl rounded-md w-32 mt-2 z-10"
+                  className="absolute bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-xl rounded-md w-32 mt-2 z-10"
                 >
                   {[2022, 2023, 2024, 2025].map((year) => (
                     <motion.li
@@ -90,7 +94,7 @@ const HorizontalScroll = () => {
                         setSelectedYear(year);
                         setDropdownOpen(false);
                       }}
-                      className="px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+                      className="px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-colors"
                     >
                       {year}
                     </motion.li>
@@ -102,7 +106,11 @@ const HorizontalScroll = () => {
         </div>
       </div>
 
-      {loading && <p className="text-center text-gray-500 mt-4 text-lg">Loading events...</p>}
+      {loading && (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ieee-blue"></div>
+        </div>
+      )}
 
       {!loading && !hasEvents && (
         <p className="text-center text-gray-500 mt-4 text-lg">No events found for {selectedYear}</p>
@@ -113,12 +121,13 @@ const HorizontalScroll = () => {
         societies.map((society) => {
           const societyEvents = filteredEvents.filter((event) => event.society === society);
           return societyEvents.length > 0 ? (
-            <div key={society} className="mb-4">
-              <div className="sticky top-20 bg-white dark:bg-ieee-dark z-10 py-4 text-left">
-                <h2 className="text-3xl font-semibold text-ieee-blue dark:text-ieee-light uppercase">
+            <div key={society} className="mb-12">
+              {/* Sticky Heading */}
+              <div className="sticky top-16 bg-white dark:bg-ieee-dark z-10 py-4 text-left">
+                <h2 className="text-4xl font-bold text-ieee-blue dark:text-ieee-light uppercase">
                   {society.replace("-", " ")}
                 </h2>
-                <hr className="border-gray-300 mt-1" />
+                <hr className="border-gray-300 mt-2" />
               </div>
               <HorizontalScrollCarousel events={societyEvents} />
             </div>
@@ -150,7 +159,7 @@ const HorizontalScrollCarousel = ({ events }) => {
       <div className="sticky top-16 flex h-screen items-center overflow-hidden">
         <motion.div
           style={{ x }}
-          className="flex gap-5 will-change-transform"
+          className="flex gap-8 will-change-transform"
         >
           {events.map((event) => (
             <EventCard event={event} key={event._id} />
@@ -172,24 +181,45 @@ const EventCard = ({ event }) => {
   };
 
   // Use Sanity's image URL builder to optimize the image
-  const optimizedImageUrl = urlFor(event.imageUrl).width(440).height(420).auto('format').url();
+  const optimizedImageUrl = urlFor(event.imageUrl)
+    .width(window.innerWidth < 640 ? 280 : 440) // Responsive width
+    .height(window.innerWidth < 640 ? 380 : 420) // Responsive height
+    .auto("format")
+    .url();
 
   return (
-    <div
+    <motion.div
       onClick={handleClick}
-      className="group relative h-[380px] w-[280px] sm:h-[420px] sm:w-[440px] overflow-hidden rounded-xl shadow-xl cursor-pointer transition-transform duration-300 hover:scale-110 will-change-transform"
+      className="group relative h-[380px] w-[280px] sm:h-[420px] sm:w-[440px] overflow-hidden rounded-2xl shadow-2xl cursor-pointer transition-transform duration-300 hover:scale-105 will-change-transform"
+      whileHover={{ scale: 1.05 }}
+      aria-label={`Event: ${event.name}`}
     >
       <div
         className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
         style={{ backgroundImage: `url(${optimizedImageUrl || "/fallback.jpg"})` }}
       ></div>
 
-      <motion.div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 backdrop-blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <p className="text-3xl sm:text-4xl font-bold uppercase text-white tracking-wide px-6 text-center drop-shadow-xl">
+      <motion.div className="absolute inset-0 z-10 flex flex-col justify-end p-6 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <h3 className="text-3xl sm:text-4xl font-bold uppercase text-white tracking-wide mb-2 drop-shadow-xl">
           {event.name}
-        </p>
+        </h3>
+        <div className="flex items-center space-x-4 text-gray-200">
+          <FaCalendarAlt className="w-5 h-5" />
+          <p>{new Date(event.startDateTime).toLocaleDateString()}</p>
+        </div>
+        <div className="flex items-center space-x-4 text-gray-200 mt-2">
+          <FaUsers className="w-5 h-5" />
+          <p>Team Size: <CountUp end={event.teamSize} duration={2} /></p>
+        </div>
+        {/* Conditionally render prize pool */}
+        {event.prizePool > 0 && (
+          <div className="flex items-center space-x-4 text-gray-200 mt-2">
+            <FaTrophy className="w-5 h-5" />
+            <p>Prize Pool: <CountUp end={event.prizePool} duration={2} prefix="₹" /></p>
+          </div>
+        )}
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

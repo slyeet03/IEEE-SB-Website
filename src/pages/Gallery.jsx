@@ -18,8 +18,10 @@ const ParallaxImages = () => {
     Array.from({ length: 30 }, (_, i) => `https://picsum.photos/600/400?random=${i}`)
   );
 
-  const [lightboxController, setLightboxController] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(1);
+  const [lightboxController, setLightboxController] = useState({
+    toggler: false,
+    slide: 1,
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,18 +38,31 @@ const ParallaxImages = () => {
   }, []);
 
   const openLightbox = (index) => {
-    setCurrentSlide(index);
-    setLightboxController(!lightboxController);
+    setLightboxController({
+      toggler: !lightboxController.toggler, // Ensure toggler always updates uniquely
+      slide: index, // Set the correct slide index
+    });
   };
 
   return (
     <div className="relative mx-auto max-w-6xl px-6 py-20">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {images.map((src, i) => (
-          <ParallaxImg key={i} src={src} alt={`Gallery Image ${i + 1}`} index={i + 1} openLightbox={openLightbox} row={i % 4} />
+          <ParallaxImg
+            key={i}
+            src={src}
+            alt={`Gallery Image ${i + 1}`}
+            index={i + 1}
+            openLightbox={openLightbox}
+            row={i % 4}
+          />
         ))}
       </div>
-      <FsLightbox toggler={lightboxController} sources={images} slide={currentSlide} key={currentSlide} />
+      <FsLightbox
+        toggler={lightboxController.toggler}
+        sources={images}
+        slide={lightboxController.slide}
+      />
     </div>
   );
 };

@@ -23,7 +23,7 @@ const formatSociety = (society) => {
     "ieee-cs": "IEEE CS",
     "ieee-wie": "IEEE WIE",
     "ieee-cis": "IEEE CIS",
-    "genesis": "Genesis"
+    genesis: "Genesis",
   };
   return societyMap[society?.toLowerCase()] || society;
 };
@@ -34,27 +34,21 @@ export default function SwipeCards() {
   useEffect(() => {
     const fetchEvents = async () => {
       const query = `*[_type == "event"] | order(startDateTime desc) [0...4] {
-        _id,
-        name,
-        startDateTime,
-        eventOverview,
-        description,
-        "poster": poster.asset->url,
-        society
+        _id, name, startDateTime, eventOverview, description, "poster": poster.asset->url, society
       }`;
 
       const data = await client.fetch(query);
       const today = new Date();
 
-      const processedEvents = data.map((event) => ({
-        ...event,
-        status: new Date(event.startDateTime) > today ? "upcoming" : "past",
-        poster: event.poster ? urlFor(event.poster) : "",
-        formattedDate: formatDate(event.startDateTime),
-        formattedSociety: formatSociety(event.society),
-      }));
-
-      setEvents(processedEvents);
+      setEvents(
+        data.map((event) => ({
+          ...event,
+          status: new Date(event.startDateTime) > today ? "upcoming" : "past",
+          poster: event.poster ? urlFor(event.poster) : "",
+          formattedDate: formatDate(event.startDateTime),
+          formattedSociety: formatSociety(event.society),
+        }))
+      );
     };
 
     fetchEvents();
@@ -62,22 +56,21 @@ export default function SwipeCards() {
 
   return (
     <section className="py-20 bg-white dark:bg-ieee-dark">
-  <motion.h1
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-    className="text-5xl font-extrabold text-ieee-blue dark:text-ieee-light mb-6 text-center"
-  >
-    Events
-  </motion.h1>
-  <p className="text-xl text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto mb-12">
-    Explore upcoming and past events organized by IEEE SB MUJ.
-  </p>
-  <div className="container mx-auto px-6 md:px-12 lg:px-24">
-    <EventCardSection events={events} />
-  </div>
-</section>
-
+      <motion.h1
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-5xl font-extrabold text-ieee-blue dark:text-ieee-light mb-6 text-center"
+      >
+        Events
+      </motion.h1>
+      <p className="text-xl text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto mb-12">
+        Explore upcoming and past events organized by IEEE MUJ.
+      </p>
+      <div className="container mx-auto px-6 md:px-12 lg:px-24">
+        <EventCardSection events={events} />
+      </div>
+    </section>
   );
 }
 
@@ -86,9 +79,11 @@ const EventCardSection = ({ events }) => {
   const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
   useEffect(() => {
-    setCards(events);
-    setCurrentEventIndex(events.length - 1);
-  }, [events]);
+    if (events.length > 0 && cards.length === 0) {
+      setCards([...events].reverse());
+      setCurrentEventIndex(events.length - 1);
+    }
+  }, [events, cards.length]);
 
   if (events.length === 0) {
     return <p className="text-center text-gray-500">No events available</p>;
@@ -98,8 +93,13 @@ const EventCardSection = ({ events }) => {
     setCards((prevCards) => {
       const updatedCards = prevCards.filter((card) => card._id !== removedCardId);
       const newIndex = updatedCards.length - 1;
+
+      if (updatedCards.length === 0) {
+        return [...events].reverse();
+      }
+
       setCurrentEventIndex(newIndex >= 0 ? newIndex : 0);
-      return updatedCards.length === 0 ? events : updatedCards;
+      return updatedCards;
     });
   };
 
@@ -113,7 +113,7 @@ const EventCardSection = ({ events }) => {
   };
 
   return (
-    <div className="grid md:grid-cols-2 h-[600px]">
+    <div className="grid md:grid-cols-2 h-[600px] relative">
       <div className="grid h-full w-full place-items-center bg-white dark:bg-ieee-dark">
         {cards.map((card) => (
           <SwipeCard
@@ -134,7 +134,12 @@ const EventCardSection = ({ events }) => {
               {currentEvent.formattedSociety} | {currentEvent.formattedDate}
             </p>
             <div className="text-lg text-gray-800 dark:text-gray-200 mb-6 space-y-4">
-              {truncateText(currentEvent.status === "upcoming" ? currentEvent.eventOverview : currentEvent.description, WORD_LIMIT)
+              {truncateText(
+                currentEvent.status === "upcoming"
+                  ? currentEvent.eventOverview
+                  : currentEvent.description,
+                WORD_LIMIT
+              )
                 .split("\n")
                 .map((para, index) => (
                   <p key={index}>{para}</p>
@@ -152,6 +157,18 @@ const EventCardSection = ({ events }) => {
           <p className="text-gray-500">Loading event details...</p>
         )}
       </div>
+
+      {/* 👇 Swipe hint below cards */}
+      <div className="flex justify-center mt-4">
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1 }}
+          className="text-gray-500 dark:text-gray-400 text-sm"
+        >
+          Swipe to explore more events!
+        </motion.p>
+      </div>
     </div>
   );
 };
@@ -165,22 +182,30 @@ const SwipeCard = ({ _id, poster, onRemove, isFront }) => {
     return `${rotateRaw.get() + offset}deg`;
   });
 
-  const handleDragEnd = () => {
-    if (Math.abs(x.get()) > 100) {
-      onRemove();
-    }
-  };
+  const [showHint, setShowHint] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setShowHint(false), 2000);
+  }, []);
 
   return (
     <motion.img
       src={poster}
-      alt="Event Card"
+      alt={`Poster for ${_id}`}
       className="h-[31rem] w-[25rem] origin-bottom rounded-lg bg-white object-cover hover:cursor-grab active:cursor-grabbing"
       style={{ gridRow: 1, gridColumn: 1, x, opacity, rotate }}
-      animate={{ scale: isFront ? 1 : 0.98 }}
+      animate={{
+        scale: isFront ? 1 : 0.98,
+        x: showHint ? [0, 10, -10, 0] : 0, // 👈 Shake effect
+      }}
+      transition={{ duration: 0.5, repeat: showHint ? 2 : 0 }}
       drag={isFront ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
-      onDragEnd={handleDragEnd}
+      onDragEnd={() => {
+        if (Math.abs(x.getVelocity()) > 700 || Math.abs(x.get()) > 150) {
+          onRemove();
+        }
+      }}
     />
   );
 };
