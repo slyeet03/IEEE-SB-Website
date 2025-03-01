@@ -21,11 +21,11 @@ export default function Hero() {
 
   // Floating memory images
   const memoryImages = [
-    { src: "https://picsum.photos/400/300?random=10", top: "10%", left: "15%" },
-    { src: "https://picsum.photos/400/300?random=11", top: "10%", right: "0%" },
-    { src: "https://picsum.photos/400/300?random=12", top: "40%", left: "5%" },
-    { src: "https://picsum.photos/400/300?random=14", top: "70%", left: "20%" },
-    { src: "https://picsum.photos/400/300?random=15", top: "85%", right: "15%" },
+    { src: "https://cdn.sanity.io/images/gcb0j4e6/production/235d12a437a470bb1e8262c8fb1d0e0aecd18b0f-6000x4000.jpg", top: "10%", left: "15%" },
+    { src: "https://cdn.sanity.io/images/gcb0j4e6/production/4bcf01ecd1cc7e830b18df82f4e7068a777cd86b-1600x1200.jpg", top: "10%", right: "0%" },
+    { src: "https://cdn.sanity.io/images/gcb0j4e6/production/edd7bd9b7efa440bf0a6747300de4289d77ef32f-1600x1200.jpg", top: "40%", left: "5%" },
+    { src: "https://cdn.sanity.io/images/gcb0j4e6/production/2c1b2f168ddd0ae226b1db29581377359f256374-6000x3376.jpg", top: "70%", left: "20%" },
+    { src: "https://cdn.sanity.io/images/gcb0j4e6/production/69f31f2fdb3b852cf4d25da52147c2ce18601f02-6000x3368.jpg", top: "85%", right: "15%" },
   ];
 
   // Button Glow Animation

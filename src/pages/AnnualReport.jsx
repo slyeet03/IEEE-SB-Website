@@ -162,12 +162,12 @@ const AnnualReport = () => {
               )}
               <h2 className="text-xl font-semibold">{event.name}</h2>
               <p className="text-sm font-semibold text-[var(--accent-color)]">
-                Organized by: {event.society.toUpperCase()}
+                Organized by: {event.society ? event.society.toUpperCase() : "Unknown Society"}
               </p>
               <p className="mt-2 text-gray-300">
-                {event.description.length > 100
+                {event.description && event.description.length > 100
                   ? `${event.description.substring(0, 100)}...`
-                  : event.description}
+                  : event.description || "No description available"}
               </p>
               <p className="mt-1 text-sm text-gray-400">
                 📅 {new Date(event.startDateTime).toDateString()}
