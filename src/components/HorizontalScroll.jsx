@@ -1,4 +1,4 @@
-import { motion, useTransform, useScroll } from "framer-motion";
+import { motion, useTransform, useScroll, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "../../sanity";
@@ -72,35 +72,37 @@ const HorizontalScroll = () => {
             <motion.div className="relative dropdown-menu" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-2 px-4 py-2 rounded-md bg-white/80 dark:bg-gray-700/80 backdrop-blur-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200/80 dark:hover:bg-gray-600/80 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-200/60 dark:bg-gray-700/80 backdrop-blur-lg text-gray-800 dark:text-gray-200 hover:bg-gray-200/80 dark:hover:bg-gray-600/80 transition-colors"
                 aria-label="Select Year"
               >
                 <span className="font-medium text-sm">{selectedYear}</span>
                 <FiChevronDown className={`transition-transform ${dropdownOpen ? "rotate-180" : "rotate-0"}`} />
               </button>
 
-              {dropdownOpen && (
-                <motion.ul
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-xl rounded-md w-32 mt-2 z-10"
-                >
-                  {[2022, 2023, 2024, 2025].map((year) => (
-                    <motion.li
-                      key={year}
-                      onClick={() => {
-                        setSelectedYear(year);
-                        setDropdownOpen(false);
-                      }}
-                      className="px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-colors"
-                    >
-                      {year}
-                    </motion.li>
-                  ))}
-                </motion.ul>
-              )}
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.ul
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg shadow-xl rounded-md w-32 mt-2 z-10"
+                  >
+                    {[2022, 2023, 2024, 2025].map((year) => (
+                      <motion.li
+                        key={year}
+                        onClick={() => {
+                          setSelectedYear(year);
+                          setDropdownOpen(false);
+                        }}
+                        className="px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-200/80 dark:hover:bg-gray-700/80 transition-colors cursor-pointer"
+                      >
+                        {year}
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                )}
+              </AnimatePresence>
             </motion.div>
           </div>
         </div>
@@ -121,7 +123,7 @@ const HorizontalScroll = () => {
         societies.map((society) => {
           const societyEvents = filteredEvents.filter((event) => event.society === society);
           return societyEvents.length > 0 ? (
-            <div key={society} className="mb-12">
+            <div key={society} className="mb-8"> {/* Reduced margin-bottom from mb-12 to mb-8 */}
               {/* Sticky Heading */}
               <div className="sticky top-16 bg-white dark:bg-ieee-dark z-10 py-4 text-left">
                 <h2 className="text-4xl font-bold text-ieee-blue dark:text-ieee-light uppercase">
@@ -159,7 +161,7 @@ const HorizontalScrollCarousel = ({ events }) => {
       <div className="sticky top-16 flex h-screen items-center overflow-hidden">
         <motion.div
           style={{ x }}
-          className="flex gap-8 will-change-transform"
+          className="flex gap-2 will-change-transform"
         >
           {events.map((event) => (
             <EventCard event={event} key={event._id} />
@@ -179,6 +181,13 @@ const EventCard = ({ event }) => {
     const route = eventDate < today ? `/events/post/${event._id}` : `/events/pre/${event._id}`;
     navigate(route);
   };
+
+  // Format the date as "7 July, 2025"
+  const formattedDate = eventDate.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   // Use Sanity's image URL builder to optimize the image
   const optimizedImageUrl = urlFor(event.imageUrl)
@@ -205,7 +214,7 @@ const EventCard = ({ event }) => {
         </h3>
         <div className="flex items-center space-x-4 text-gray-200">
           <FaCalendarAlt className="w-5 h-5" />
-          <p>{new Date(event.startDateTime).toLocaleDateString()}</p>
+          <p>{formattedDate}</p> {/* Use formatted date here */}
         </div>
         <div className="flex items-center space-x-4 text-gray-200 mt-2">
           <FaUsers className="w-5 h-5" />
