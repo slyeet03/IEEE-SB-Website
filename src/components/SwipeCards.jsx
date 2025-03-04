@@ -23,7 +23,8 @@ const formatSociety = (society) => {
     "ieee-cs": "IEEE CS",
     "ieee-wie": "IEEE WIE",
     "ieee-cis": "IEEE CIS",
-    genesis: "Genesis",
+    "ieeexacm": "IEEE X ACM",
+    "genesis": "Genesis",
   };
   return societyMap[society?.toLowerCase()] || society;
 };
