@@ -32,9 +32,9 @@ const StatCard = ({ targetNumber, label }) => {
       animate={inView ? { scale: 1, opacity: 1 } : {}}
       whileHover={{ scale: 1.05, rotateX: 10, rotateY: 10 }}
       transition={{ duration: 0.5 }}
-      className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-transform perspective-500"
+      className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-transform perspective-500"
     >
-      <h3 className="text-4xl font-bold text-ieee-blue dark:text-blue-400 mb-2 font-display">
+      <h3 className="text-3xl sm:text-4xl font-bold text-ieee-blue dark:text-blue-400 mb-2 font-display">
         {count}+
       </h3>
       <p className="text-gray-600 dark:text-gray-400">{label}</p>
@@ -59,7 +59,7 @@ export default function About() {
   };
 
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-900 relative">
+    <section className="py-16 sm:py-20 bg-gray-50 dark:bg-gray-900 relative">
       {/* Parallax Background */}
       <div
         className="absolute inset-0 bg-cover bg-fixed opacity-10"
@@ -74,19 +74,19 @@ export default function About() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           transition={{ staggerChildren: 0.2 }}
-          className="space-y-16"
+          className="space-y-12 sm:space-y-16"
         >
           {/* Title Section */}
-          <div className="text-center space-y-8">
+          <div className="text-center space-y-6 sm:space-y-8">
             <motion.h1
               variants={fadeInUp}
-              className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white font-display"
+              className="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white font-display"
             >
               Institute of Electrical and Electronics Engineers
             </motion.h1>
             <motion.p
               variants={fadeInUp}
-              className="text-xl text-ieee-blue dark:text-blue-400 font-semibold"
+              className="text-lg sm:text-xl text-ieee-blue dark:text-blue-400 font-semibold"
             >
               Advancing technology for the benefit of humanity.
             </motion.p>
@@ -100,7 +100,7 @@ export default function About() {
           </div>
 
           {/* Stats Section with Animated Numbers */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             <StatCard targetNumber="500" label="Members" />
             <StatCard targetNumber="50" label="Events" />
             <StatCard targetNumber="4" label="Societies" />
@@ -108,9 +108,9 @@ export default function About() {
           </div>
 
           {/* About Section */}
-          <div className="space-y-12">
-            <motion.div variants={fadeInUp} className="space-y-6">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white font-display">
+          <div className="space-y-8 sm:space-y-12">
+            <motion.div variants={fadeInUp} className="space-y-4 sm:space-y-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white font-display">
                 About IEEE SB MUJ
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
@@ -124,9 +124,9 @@ export default function About() {
               </p>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <motion.div variants={fadeInUp} className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white font-display">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white font-display">
                   Our Vision
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
@@ -138,7 +138,7 @@ export default function About() {
               </motion.div>
 
               <motion.div variants={fadeInUp} className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white font-display">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white font-display">
                   Our Mission
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">

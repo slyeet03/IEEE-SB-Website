@@ -97,12 +97,14 @@ export default function BentoGrid({ items }) {
         )}
       </AnimatePresence>
 
-      <div className="grid md:grid-cols-4 md:grid-rows-5 gap-4 md:max-w-[1200px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-5 gap-4 md:max-w-[1200px] mx-auto">
         {items.map((item, index) =>
           index !== 7 ? (
             <motion.div
               key={item.id}
-              className={`bento-item min-h-[200px] md:min-h-[150px] flex items-center justify-center text-white text-lg font-bold rounded-xl ${disp[index]}`}
+              className={`bento-item min-h-[150px] md:min-h-[150px] flex items-center justify-center text-white text-lg font-bold rounded-xl ${
+                disp[index]
+              }`}
               style={{
                 backgroundImage: `url(${item.image})`,
                 backgroundSize: "cover",
@@ -129,7 +131,7 @@ export default function BentoGrid({ items }) {
           ) : (
             <div
               key={item.id}
-              className={`bento-item min-h-[200px] md:min-h-[150px] flex items-center justify-center text-ieee-blue text-3xl font-bold rounded-xl ${disp[index]}`}
+              className={`bento-item min-h-[150px] md:min-h-[150px] flex items-center justify-center text-ieee-blue text-3xl font-bold rounded-xl ${disp[index]}`}
             >
               <motion.div className="relative w-full h-full flex justify-center items-center p-4">
                 {item.label}

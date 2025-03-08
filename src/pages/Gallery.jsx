@@ -14,7 +14,6 @@ export const Gallery = () => {
 };
 
 const ParallaxImages = () => {
-  // Replace placeholder images with the provided list
   const [images, setImages] = useState([
     "https://cdn.sanity.io/images/gcb0j4e6/production/9dbd07a7df7427b447367fb10733290233436960-6000x3368.jpg?w=600&h=400",
     "https://cdn.sanity.io/images/gcb0j4e6/production/8c71e8115be50f806b0f44dce41a7f019290679b-6000x3368.jpg?w=600&h=400",
@@ -143,20 +142,6 @@ const ParallaxImages = () => {
     toggler: false,
     slide: 1,
   });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 400) {
-        setImages((prev) => [
-          ...prev,
-          ...Array.from({ length: 10 }, (_, i) => `https://picsum.photos/600/400?random=${prev.length + i}`),
-        ]);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const openLightbox = (index) => {
     setLightboxController({
