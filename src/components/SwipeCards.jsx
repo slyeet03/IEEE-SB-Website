@@ -197,10 +197,13 @@ const SwipeCard = ({ _id, poster, onRemove, isFront }) => {
       drag={isFront ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={() => {
-        if (Math.abs(x.getVelocity()) > 400 || Math.abs(x.get()) > 100) {
-            onRemove();
+        const velocityThreshold = window.innerWidth < 768 ? 300 : 400; // Lower threshold for mobile
+        const distanceThreshold = window.innerWidth < 768 ? 75 : 100; // Reduced distance threshold for mobile
+      
+        if (Math.abs(x.getVelocity()) > velocityThreshold || Math.abs(x.get()) > distanceThreshold) {
+          onRemove();
         }
-    }}    
+      }}  
     />
   );
 };
