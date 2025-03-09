@@ -56,19 +56,19 @@ export default function SwipeCards() {
   }, []);
 
   return (
-    <section className="py-20 bg-white dark:bg-ieee-dark">
+    <section className="py-16 bg-white dark:bg-ieee-dark">
       <motion.h1
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="text-5xl font-extrabold text-ieee-blue dark:text-ieee-light mb-6 text-center"
+        className="text-4xl md:text-5xl font-extrabold text-ieee-blue dark:text-ieee-light mb-6 text-center"
       >
         Events
       </motion.h1>
-      <p className="text-xl text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto mb-12">
+      <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 text-center max-w-3xl mx-auto mb-8">
         Explore upcoming and past events organized by IEEE MUJ.
       </p>
-      <div className="container mx-auto px-6 md:px-12 lg:px-24">
+      <div className="container mx-auto px-4 md:px-12 lg:px-24">
         <EventCardSection events={events} />
       </div>
     </section>
@@ -114,8 +114,8 @@ const EventCardSection = ({ events }) => {
   };
 
   return (
-    <div className="grid md:grid-cols-2 h-[600px] relative">
-      <div className="grid h-full w-full place-items-center bg-white dark:bg-ieee-dark">
+    <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6">
+      <div className="grid place-items-center bg-white dark:bg-ieee-dark">
         {cards.map((card) => (
           <SwipeCard
             key={card._id}
@@ -125,16 +125,16 @@ const EventCardSection = ({ events }) => {
           />
         ))}
       </div>
-      <div className="flex items-center justify-center p-8 bg-white dark:bg-ieee-dark">
+      <div className="flex items-center justify-center p-6 bg-white dark:bg-ieee-dark">
         {currentEvent ? (
           <div className="text-center">
-            <h2 className="text-4xl font-bold mb-4 text-ieee-blue dark:text-ieee-light">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-ieee-blue dark:text-ieee-light">
               {currentEvent.name}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               {currentEvent.formattedSociety} | {currentEvent.formattedDate}
             </p>
-            <div className="text-lg text-gray-800 dark:text-gray-200 mb-6 space-y-4">
+            <div className="text-md md:text-lg text-gray-800 dark:text-gray-200 mb-6 space-y-4">
               {truncateText(
                 currentEvent.status === "upcoming"
                   ? currentEvent.eventOverview
@@ -159,7 +159,6 @@ const EventCardSection = ({ events }) => {
         )}
       </div>
 
-      {/* 👇 Swipe hint below cards */}
       <div className="flex justify-center mt-4">
         <motion.p
           initial={{ opacity: 0, y: 10 }}
@@ -193,20 +192,15 @@ const SwipeCard = ({ _id, poster, onRemove, isFront }) => {
     <motion.img
       src={poster}
       alt={`Poster for ${_id}`}
-      className="h-[31rem] w-[25rem] origin-bottom rounded-lg bg-white object-cover hover:cursor-grab active:cursor-grabbing"
+      className="h-[22rem] md:h-[31rem] w-[18rem] md:w-[25rem] origin-bottom rounded-lg bg-white object-cover hover:cursor-grab active:cursor-grabbing"
       style={{ gridRow: 1, gridColumn: 1, x, opacity, rotate }}
-      animate={{
-        scale: isFront ? 1 : 0.98,
-        x: showHint ? [0, 10, -10, 0] : 0, // 👈 Shake effect
-      }}
-      transition={{ duration: 0.5, repeat: showHint ? 2 : 0 }}
       drag={isFront ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={() => {
-        if (Math.abs(x.getVelocity()) > 700 || Math.abs(x.get()) > 150) {
-          onRemove();
+        if (Math.abs(x.getVelocity()) > 400 || Math.abs(x.get()) > 100) {
+            onRemove();
         }
-      }}
+    }}    
     />
   );
 };

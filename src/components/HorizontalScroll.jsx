@@ -64,7 +64,6 @@ const HorizontalScroll = () => {
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-100 dark:from-ieee-dark dark:to-gray-900 p-4 scroll-smooth">
-      {/* Sticky Navbar */}
       <div className="sticky top-0 bg-white dark:bg-ieee-dark z-20 py-4 mb-4">
         <div className="flex justify-end">
           <div className="flex items-center space-x-4">
@@ -123,10 +122,10 @@ const HorizontalScroll = () => {
         societies.map((society) => {
           const societyEvents = filteredEvents.filter((event) => event.society === society);
           return societyEvents.length > 0 ? (
-            <div key={society} className="mb-8"> {/* Reduced margin-bottom from mb-12 to mb-8 */}
+            <div key={society} className="mb-8">
               {/* Sticky Heading */}
               <div className="sticky top-16 bg-white dark:bg-ieee-dark z-10 py-4 text-left">
-                <h2 className="text-4xl font-bold text-ieee-blue dark:text-ieee-light uppercase">
+                <h2 className="text-3xl md:text-4xl font-bold text-ieee-blue dark:text-ieee-light uppercase">
                   {society.replace("-", " ")}
                 </h2>
                 <hr className="border-gray-300 mt-2" />
@@ -147,11 +146,11 @@ const HorizontalScrollCarousel = ({ events }) => {
 
   let stopPercentage;
   if (totalCards === 1) {
-    stopPercentage = "0%"; 
+    stopPercentage = "0%";
   } else if (totalCards === 2) {
-    stopPercentage = "-50%"; 
+    stopPercentage = "-50%";
   } else {
-    stopPercentage = "-80%"; 
+    stopPercentage = "-80%";
   }
 
   const x = useTransform(scrollYProgress, [0, 1], ["0%", stopPercentage]);
@@ -182,24 +181,24 @@ const EventCard = ({ event }) => {
     navigate(route);
   };
 
-  // Format the date as "7 July, 2025"
+
   const formattedDate = eventDate.toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
-  // Use Sanity's image URL builder to optimize the image
+
   const optimizedImageUrl = urlFor(event.imageUrl)
-    .width(window.innerWidth < 640 ? 280 : 440) // Responsive width
-    .height(window.innerWidth < 640 ? 380 : 420) // Responsive height
+    .width(window.innerWidth < 640 ? 280 : 440)
+    .height(window.innerWidth < 640 ? 380 : 420)
     .auto("format")
     .url();
 
   return (
     <motion.div
       onClick={handleClick}
-      className="group relative h-[380px] w-[280px] sm:h-[420px] sm:w-[440px] overflow-hidden rounded-2xl shadow-2xl cursor-pointer transition-transform duration-300 hover:scale-105 will-change-transform"
+      className="group relative h-[280px] w-[200px] sm:h-[420px] sm:w-[440px] overflow-hidden rounded-2xl shadow-2xl cursor-pointer transition-transform duration-300 hover:scale-105 will-change-transform"
       whileHover={{ scale: 1.05 }}
       aria-label={`Event: ${event.name}`}
     >
@@ -208,23 +207,22 @@ const EventCard = ({ event }) => {
         style={{ backgroundImage: `url(${optimizedImageUrl || "/fallback.jpg"})` }}
       ></div>
 
-      <motion.div className="absolute inset-0 z-10 flex flex-col justify-end p-6 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <h3 className="text-3xl sm:text-4xl font-bold uppercase text-white tracking-wide mb-2 drop-shadow-xl">
+      <motion.div className="absolute inset-0 z-10 flex flex-col justify-end p-4 sm:p-6 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <h3 className="text-xl sm:text-3xl font-bold uppercase text-white tracking-wide mb-2 drop-shadow-xl">
           {event.name}
         </h3>
-        <div className="flex items-center space-x-4 text-gray-200">
-          <FaCalendarAlt className="w-5 h-5" />
-          <p>{formattedDate}</p> {/* Use formatted date here */}
+        <div className="flex items-center space-x-2 sm:space-x-4 text-gray-200">
+          <FaCalendarAlt className="w-4 h-4 sm:w-5 sm:h-5" />
+          <p className="text-sm sm:text-base">{formattedDate}</p>
         </div>
-        <div className="flex items-center space-x-4 text-gray-200 mt-2">
-          <FaUsers className="w-5 h-5" />
-          <p>Team Size: <CountUp end={event.teamSize} duration={2} /></p>
+        <div className="flex items-center space-x-2 sm:space-x-4 text-gray-200 mt-2">
+          <FaUsers className="w-4 h-4 sm:w-5 sm:h-5" />
+          <p className="text-sm sm:text-base">Team Size: <CountUp end={event.teamSize} duration={2} /></p>
         </div>
-        {/* Conditionally render prize pool */}
         {event.prizePool > 0 && (
-          <div className="flex items-center space-x-4 text-gray-200 mt-2">
-            <FaTrophy className="w-5 h-5" />
-            <p>Prize Pool: <CountUp end={event.prizePool} duration={2} prefix="₹" /></p>
+          <div className="flex items-center space-x-2 sm:space-x-4 text-gray-200 mt-2">
+            <FaTrophy className="w-4 h-4 sm:w-5 sm:h-5" />
+            <p className="text-sm sm:text-base">Prize Pool: <CountUp end={event.prizePool} duration={2} prefix="₹" /></p>
           </div>
         )}
       </motion.div>

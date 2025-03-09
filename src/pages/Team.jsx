@@ -33,7 +33,6 @@ const Team = () => {
 
   const dropdownRef = useRef(null);
 
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -103,7 +102,6 @@ const Team = () => {
       };
     });
   };
-
 
   const groupedData = teamData.reduce((acc, member) => {
     if (!member.committee) return acc;
@@ -218,21 +216,21 @@ const Team = () => {
   return (
     <Container className="mt-16 sm:mt-24 lg:mt-32 relative mb-12">
       <div className="text-center mt-8 mb-12">
-        <h1 className="text-5xl font-bold text-ieee-blue dark:text-ieee-light">Meet Our Team</h1>
-        <p className="mt-4 text-xl text-gray-600 dark:text-gray-400">
+        <h1 className="text-4xl sm:text-5xl font-bold text-ieee-blue dark:text-ieee-light">Meet Our Team</h1>
+        <p className="mt-4 text-lg sm:text-xl text-gray-600 dark:text-gray-400">
           Discover the talented individuals behind the development of our website.
         </p>
         <a
           href="/website-team"
-          className="mt-4 inline-block text-lg font-semibold text-ieee-blue hover:text-ieee-dark dark:text-ieee-light dark:hover:text-ieee-dark transition-all duration-300"
+          className="mt-4 inline-block text-base sm:text-lg font-semibold text-ieee-blue hover:text-ieee-dark dark:text-ieee-light dark:hover:text-ieee-dark transition-all duration-300"
         >
           Click here to meet the team who made this website
         </a>
       </div>
 
-      <div className="flex justify-between mb-8">
+      <div className="flex flex-col sm:flex-row justify-between mb-8 space-y-4 sm:space-y-0 sm:space-x-4">
         <div className="flex items-center space-x-4">
-          <span className="text-xl font-semibold text-ieee-blue dark:text-ieee-light">Year:</span>
+          <span className="text-lg sm:text-xl font-semibold text-ieee-blue dark:text-ieee-light">Year:</span>
           <motion.div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((prev) => !prev)}
@@ -271,7 +269,7 @@ const Team = () => {
           </motion.div>
         </div>
 
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap gap-2">
           {["Advisory", "IEEE SB", "IEEE CS", "IEEE WIE"].map((tab) => (
             <motion.button
               key={tab}
@@ -279,7 +277,7 @@ const Team = () => {
                 setSelectedTab(tab);
                 scrollToSection(tab);
               }}
-              className={`px-4 py-2 rounded-lg font-semibold ${
+              className={`px-4 py-2 rounded-lg font-semibold text-sm sm:text-base ${
                 selectedTab === tab
                   ? 'bg-gray-800 text-white'
                   : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'

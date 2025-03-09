@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import gsap from "gsap";
 import { useState, useEffect, useRef, useMemo } from "react";
 import ElectricBackground from "./background";
 
@@ -26,8 +25,22 @@ export default function Hero() {
     { src: "https://cdn.sanity.io/images/gcb0j4e6/production/69f31f2fdb3b852cf4d25da52147c2ce18601f02-6000x3368.jpg", top: "90%", right: "10%" },
   ];
 
-  const glowTransition = { repeat: Infinity, repeatType: "reverse", duration: 1.5, ease: "easeInOut" };
-  const glowAnimation = { boxShadow: ["0px 0px 15px rgba(0, 128, 255, 0.5)", "0px 0px 25px rgba(0, 128, 255, 0.8)", "0px 0px 15px rgba(0, 128, 255, 0.5)"] };
+  const isMobile = window.innerWidth < 640;
+
+  const glowTransition = {
+    repeat: Infinity,
+    repeatType: "reverse",
+    duration: isMobile ? 2 : 1.5,
+    ease: "easeInOut",
+  };
+
+  const glowAnimation = {
+    boxShadow: [
+      "0px 0px 10px rgba(0, 128, 255, 0.4)",
+      "0px 0px 15px rgba(0, 128, 255, 0.6)",
+      "0px 0px 10px rgba(0, 128, 255, 0.4)",
+    ],
+  };
 
   return (
     <ElectricBackground>
@@ -40,10 +53,10 @@ export default function Hero() {
             key={i}
             src={src}
             alt={`Memory ${i + 1}`}
-            className="absolute w-24 h-20 sm:w-40 sm:h-32 object-cover rounded-lg shadow-lg"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
-            transition={{ duration: 2, delay: i * 0.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
+            className="absolute w-20 h-16 sm:w-40 sm:h-32 object-cover rounded-lg shadow-lg"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1, y: isMobile ? [0, -5, 0] : [0, -10, 0] }} 
+            transition={{ duration: isMobile ? 3 : 2, delay: i * 0.5, repeat: Infinity, repeatType: "reverse", ease: "easeInOut" }}
             style={{ top, left, right }}
           />
         ))}
@@ -61,10 +74,10 @@ export default function Hero() {
                 <motion.span
                   key={currentWord}
                   className="text-ieee-blue inline-block"
-                  initial={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.6 }}
+                  exit={{ opacity: 0, y: 5 }}
+                  transition={{ duration: isMobile ? 0.4 : 0.6 }}
                 >
                   {currentWord}
                 </motion.span>
@@ -82,8 +95,8 @@ export default function Hero() {
                 className="bg-ieee-blue text-white px-4 py-2 sm:px-8 sm:py-3 rounded-md hover:bg-blue-700 transition-colors duration-200 shadow-lg"
                 animate={glowAnimation}
                 transition={glowTransition}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 href="/events"
               >
                 Explore Events
@@ -93,8 +106,8 @@ export default function Hero() {
                 className="border-2 border-ieee-blue text-ieee-blue dark:border-white dark:text-white px-4 py-2 sm:px-8 sm:py-3 rounded-md hover:bg-ieee-blue hover:text-white dark:hover:bg-white dark:hover:text-ieee-dark transition-colors duration-200"
                 animate={glowAnimation}
                 transition={glowTransition}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 href="https://www.ieee.org/"
               >
                 Join IEEE

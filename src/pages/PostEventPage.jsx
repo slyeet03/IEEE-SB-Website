@@ -5,7 +5,7 @@ import { client } from "../../sanity";
 import { Calendar, MapPin, Users, ArrowLeft, X, Award, User, Mic } from "lucide-react";
 import imageUrlBuilder from "@sanity/image-url";
 
-// Sanity image builder
+
 const builder = imageUrlBuilder(client);
 const urlFor = (source) => builder.image(source).width(800).url();
 

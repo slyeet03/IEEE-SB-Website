@@ -1,5 +1,3 @@
-"use client";
-
 import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -7,17 +5,17 @@ import { X } from "lucide-react";
 
 export default function BentoGrid({ items }) {
   const disp = [
-    "col-span-1 row-span-3",
-    "col-span-1 row-span-2",
-    "col-span-1 row-span-1",
-    "col-span-1 row-span-3",
-    "col-span-1 row-span-2",
-    "col-span-1 row-span-1",
-    "col-span-1 row-span-1",
-    "col-span-2 row-span-1",
-    "col-span-1 row-span-1",
-    "col-span-2 row-span-1",
-    "col-span-2 row-span-1",
+    "md:col-span-1 md:row-span-3",
+    "md:col-span-1 md:row-span-2",
+    "md:col-span-1 md:row-span-1",
+    "md:col-span-1 md:row-span-3",
+    "md:col-span-1 md:row-span-2",
+    "md:col-span-1 md:row-span-1",
+    "md:col-span-1 md:row-span-1",
+    "md:col-span-2 md:row-span-1",
+    "md:col-span-1 md:row-span-1",
+    "md:col-span-2 md:row-span-1",
+    "md:col-span-2 md:row-span-1",
   ];
 
   const [popup, setPopup] = useState({
@@ -37,6 +35,7 @@ export default function BentoGrid({ items }) {
 
   return (
     <>
+      {/* Popup Display */}
       <AnimatePresence>
         {popup.isOpen && (
           <motion.div
@@ -97,48 +96,32 @@ export default function BentoGrid({ items }) {
         )}
       </AnimatePresence>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-5 gap-4 md:max-w-[1200px] mx-auto">
-        {items.map((item, index) =>
-          index !== 7 ? (
-            <motion.div
-              key={item.id}
-              className={`bento-item min-h-[150px] md:min-h-[150px] flex items-center justify-center text-white text-lg font-bold rounded-xl ${
-                disp[index]
-              }`}
-              style={{
-                backgroundImage: `url(${item.image})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-              whileHover={{ scale: 0.98 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() =>
-                handleItemClick(item.label, item.content, item.image)
-              }
-            >
-              <div
-                className={`relative w-full h-full flex justify-center items-center ${
-                  index !== 7 ? "bg-black/60" : ""
-                } backdrop-blur-sm transition-all duration-300 hover:bg-black/40 ${
-                  index !== 7
-                    ? "dark:text-white text-white"
-                    : "dark:text-white text-ieee-blue"
-                } text-xl p-4 rounded-xl`}
-              >
-                {item.label}
-              </div>
-            </motion.div>
-          ) : (
+      {/* Grid for Desktop / Vertical Stack for Mobile */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:grid-rows-5 md:max-w-[1200px] mx-auto">
+        {items.map((item, index) => (
+          <motion.div
+            key={item.id}
+            className={`bento-item min-h-[150px] flex items-center justify-center text-white text-lg font-bold rounded-xl ${
+              disp[index]
+            }`}
+            style={{
+              backgroundImage: `url(${item.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+            whileHover={{ scale: 0.98 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() =>
+              handleItemClick(item.label, item.content, item.image)
+            }
+          >
             <div
-              key={item.id}
-              className={`bento-item min-h-[150px] md:min-h-[150px] flex items-center justify-center text-ieee-blue text-3xl font-bold rounded-xl ${disp[index]}`}
+              className={`relative w-full h-full flex justify-center items-center bg-black/60 backdrop-blur-sm transition-all duration-300 hover:bg-black/40 dark:text-white text-white text-xl p-4 rounded-xl`}
             >
-              <motion.div className="relative w-full h-full flex justify-center items-center p-4">
-                {item.label}
-              </motion.div>
+              {item.label}
             </div>
-          )
-        )}
+          </motion.div>
+        ))}
       </div>
     </>
   );

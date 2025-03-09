@@ -23,7 +23,7 @@ const AnnualReport = () => {
       }`;
       const data = await client.fetch(query);
 
-      // Filter out future events
+
       const today = new Date();
       const pastEvents = data.filter((event) => new Date(event.startDateTime) <= today);
 
@@ -32,7 +32,7 @@ const AnnualReport = () => {
     fetchEvents();
   }, []);
 
-  // Group events by year
+
   const groupedEvents = events.reduce((acc, event) => {
     const year = new Date(event.startDateTime).getFullYear();
     if (!acc[year]) acc[year] = [];
@@ -40,7 +40,7 @@ const AnnualReport = () => {
     return acc;
   }, {});
 
-  // Close dropdown when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -54,7 +54,7 @@ const AnnualReport = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)]">
-      {/* Header */}
+
       <motion.div
         className="header w-full text-center py-16 shadow-lg"
         initial={{ opacity: 0, scale: 0.8 }}
@@ -69,7 +69,7 @@ const AnnualReport = () => {
         </p>
       </motion.div>
 
-      {/* Year Selector */}
+
       <div className="flex justify-center mb-8 p-4">
         <div className="relative" ref={dropdownRef}>
           <button
@@ -82,7 +82,7 @@ const AnnualReport = () => {
             />
           </button>
 
-          {/* Dropdown Backdrop */}
+
           <AnimatePresence>
             {dropdownOpen && (
               <motion.div
@@ -95,7 +95,7 @@ const AnnualReport = () => {
             )}
           </AnimatePresence>
 
-          {/* Dropdown Menu */}
+
           <AnimatePresence>
             {dropdownOpen && (
               <motion.ul
@@ -126,9 +126,9 @@ const AnnualReport = () => {
         </div>
       </div>
 
-      {/* Timeline */}
+
       <div className="relative mx-auto max-w-6xl px-6 py-12">
-        {/* Timeline Line */}
+
         <div className="absolute top-0 bottom-0 left-1/2 transform -translate-x-1/2 w-1 bg-[var(--accent-color)]"></div>
 
         {groupedEvents[selectedYear]?.map((event, index) => (
@@ -142,10 +142,10 @@ const AnnualReport = () => {
             transition={{ duration: 0.5, delay: index * 0.1 }}
             onClick={() => navigate(`/events/post/${event._id}`)}
           >
-            {/* Timeline Dot */}
+
             <div className="absolute left-1/2 w-5 h-5 rounded-full timeline-dot transform -translate-x-1/2"></div>
 
-            {/* Event Card */}
+
             <motion.div
               className={`relative p-6 rounded-lg shadow-lg event-card max-w-lg transition-transform duration-300 hover:scale-105 ${
                 index % 2 === 0 ? "ml-20" : "mr-20"

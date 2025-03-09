@@ -166,7 +166,6 @@ const Contact = () => {
         </div>
       </div>
 
-      {/* Final Section without BG */}
       <div className="mt-16 flex justify-between items-center py-8 px-4 lg:px-20">
         <div className="text-gray-900 dark:text-gray-100 max-w-md space-y-4">
           <h3 className="text-2xl font-semibold text-ieee-blue dark:text-ieee-light">

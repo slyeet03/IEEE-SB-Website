@@ -14,7 +14,7 @@ import PostEventPage from "./pages/PostEventPage";
 import Team from "./pages/Team";
 import WebsiteTeam from "./pages/WebsiteTeam";
 import AnnualReport from "./pages/AnnualReport";
-import MemoriesGallery from "./components/MemoriesGallery";
+import ResponsiveGallery from "./components/ResponsiveGallery";
 import SwipeCards from "./components/SwipeCards";
 import AchievementsPage from "./pages/AchievementsPage";
 
@@ -22,7 +22,7 @@ const Home = () => (
   <>
     <Hero />
     <About />
-    <MemoriesGallery />
+    <ResponsiveGallery />
     <SwipeCards />
     <Achievements />
   </>

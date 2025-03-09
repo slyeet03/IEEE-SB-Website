@@ -118,17 +118,16 @@ const GeometricPattern = () => {
           />
         ))}
 
-        {/* Last Horizontal Line Below the Circles */}
         <motion.line
-          x1="1000" // Position the line far left beyond the screen
-          x2="1000" // Adjust the width of the line
-          y1="460" // Position just below the last circle
-          y2="460" // Same y position to keep it horizontal
-          stroke="#0D47A1" // Dark blue color
+          x1="1000" 
+          x2="1000"
+          y1="460" 
+          y2="460" 
+          stroke="#0D47A1" 
           strokeWidth="2"
           animate={{
-            x1: -(scrollPosition / 2) - 100, // Move further left as you scroll
-            x2: 200 - (scrollPosition / 2) - 100, // Move further left as you scroll
+            x1: -(scrollPosition / 2) - 100, 
+            x2: 200 - (scrollPosition / 2) - 100,
           }}
           transition={{
             duration: 1,
