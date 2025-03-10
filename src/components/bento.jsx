@@ -36,93 +36,95 @@ export default function BentoGrid({ items }) {
   return (
     <>
       {/* Popup Display */}
-      <AnimatePresence>
-        {popup.isOpen && (
-          <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={handleClosePopup}
-          >
-            <motion.div
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", duration: 0.5 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="relative">
-                {popup.image && (
-                  <div className="w-full h-48 md:h-64 overflow-hidden">
-                    <img
-                      src={popup.image || "/placeholder.svg"}
-                      alt={popup.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                <button
-                  onClick={handleClosePopup}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+      {/* Popup Display */}
+<AnimatePresence>
+  {popup.isOpen && (
+    <motion.div
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={handleClosePopup}
+    >
+      <motion.div
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-3xl w-full md:w-[90%] overflow-hidden border-4 relative"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ type: "spring", duration: 0.5 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Image Section - Full Height */}
+        {popup.image && (
+          <div className="relative w-full h-[60vh] md:h-[70vh]">
+            <img
+              src={popup.image || "/placeholder.svg"}
+              alt={popup.title}
+              className="w-full h-full object-cover"
+            />
 
-              <div className="p-6 md:p-8">
-                <motion.h2
-                  className="text-2xl md:text-3xl font-bold text-ieee-blue mb-4"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  {popup.title}
-                </motion.h2>
-                <motion.div
-                  className="prose dark:prose-invert max-w-none"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {popup.content}
-                  </p>
-                </motion.div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {/* Text Overlay on Image */}
+            <div className="absolute bottom-0 w-full bg-black/70 text-white p-4 md:p-6">
+              <motion.h2
+                className="text-lg md:text-2xl font-bold text-white mb-2"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+              >
+                {popup.title}
+              </motion.h2>
 
-      {/* Grid for Desktop / Vertical Stack for Mobile */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:grid-rows-5 md:max-w-[1200px] mx-auto">
-        {items.map((item, index) => (
-          <motion.div
-            key={item.id}
-            className={`bento-item min-h-[150px] flex items-center justify-center text-white text-lg font-bold rounded-xl ${
-              disp[index]
-            }`}
-            style={{
-              backgroundImage: `url(${item.image})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-            whileHover={{ scale: 0.98 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() =>
-              handleItemClick(item.label, item.content, item.image)
-            }
-          >
-            <div
-              className={`relative w-full h-full flex justify-center items-center bg-black/60 backdrop-blur-sm transition-all duration-300 hover:bg-black/40 dark:text-white text-white text-xl p-4 rounded-xl`}
-            >
-              {item.label}
+              <motion.div
+                className="text-sm md:text-base"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <p>{popup.content}</p>
+              </motion.div>
             </div>
-          </motion.div>
-        ))}
+          </div>
+        )}
+
+        {/* Close Button */}
+        <button
+          onClick={handleClosePopup}
+          className="absolute top-4 right-4 p-2 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
+{/* Grid for Desktop (Same as before) / Improved Mobile Design */}
+<div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:grid-rows-5 md:max-w-[1200px] mx-auto">
+  {items.map((item, index) => (
+    <motion.div
+      key={item.id}
+      className={`bento-item min-h-[120px] md:min-h-[150px] flex items-center justify-center text-white text-lg font-bold rounded-xl overflow-hidden ${
+        disp[index]
+      }`}
+      style={{
+        backgroundImage: `url(${item.image})`,
+        backgroundSize: "cover",
+        backgroundPosition: "top", 
+      }}
+      whileHover={{ scale: 0.98 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() =>
+        handleItemClick(item.label, item.content, item.image)
+      }
+    >
+      <div
+        className={`relative w-full h-full flex justify-center items-center bg-black/60 backdrop-blur-sm transition-all duration-300 hover:bg-black/40 dark:text-white text-white text-sm md:text-xl p-2 md:p-4 rounded-xl`}
+      >
+        {item.label}
       </div>
+    </motion.div>
+  ))}
+</div>
     </>
   );
 }

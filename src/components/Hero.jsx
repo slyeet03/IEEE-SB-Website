@@ -124,7 +124,7 @@ export default function Hero() {
                 ))}
               </div>
               <p className="text-sm sm:text-md text-center sm:text-left">
-                Join 1000+ members in our community
+                Join 1500+ members in our community
               </p>
             </div>
           </div>
