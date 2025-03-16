@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from "fram
 import { ReactLenis } from "@studio-freight/react-lenis";
 import FsLightbox from "fslightbox-react";
 import { useMediaQuery } from "react-responsive";
-import galleryImages from "../Data/GalleryData";
+import galleryImages from "../Data/galleryData";
 
 export const Gallery = () => {
   return (

@@ -57,14 +57,6 @@ const achievementsData = [
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
     },
     {
-      id: 8,
-      label: "A COMMUNITY OF INNOVATION",
-      description: "",
-      image: "",
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-    },
-    {
       id: 9,
       label: "Achievement 9",
       description: "test achievement 6",
@@ -75,14 +67,6 @@ const achievementsData = [
     {
       id: 10,
       label: "Achievement 10",
-      description: "test achievement 6",
-      image: "/public/achievement.webp",
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-    },
-    {
-      id: 11,
-      label: "Achievement 11",
       description: "test achievement 6",
       image: "/public/achievement.webp",
       content:
