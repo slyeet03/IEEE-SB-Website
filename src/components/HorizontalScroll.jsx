@@ -145,6 +145,16 @@ const HorizontalScrollCarousel = ({ events }) => {
   const totalCards = events.length;
 
   let stopPercentage;
+
+if (window.innerWidth < 640) {
+  if (totalCards === 1) {
+    stopPercentage = "0%";
+  } else if (totalCards === 2) {
+    stopPercentage = "-50%";
+  } else {
+    stopPercentage = "-85%";
+  }
+} else {
   if (totalCards === 1) {
     stopPercentage = "0%";
   } else if (totalCards === 2) {
@@ -152,6 +162,7 @@ const HorizontalScrollCarousel = ({ events }) => {
   } else {
     stopPercentage = "-60%";
   }
+}
 
   const x = useTransform(scrollYProgress, [0, 1], ["0%", stopPercentage]);
 
