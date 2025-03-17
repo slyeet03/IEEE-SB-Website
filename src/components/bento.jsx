@@ -100,7 +100,7 @@ export default function BentoGrid({ items }) {
 </AnimatePresence>
 
 {/* Grid for Desktop (Same as before) / Improved Mobile Design */}
-<div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:grid-rows-5 md:max-w-[1200px] mx-auto">
+<div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:grid-rows-4 md:max-w-[1200px] mx-auto">
   {items.map((item, index) => (
     <motion.div
       key={item.id}

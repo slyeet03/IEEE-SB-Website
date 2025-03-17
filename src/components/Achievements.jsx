@@ -19,7 +19,7 @@ function Achievements() {
         </div>
       </div>
     </section>
-  );
+  );n
 }
 
 export default Achievements;
