@@ -42,35 +42,35 @@ const achievementsData = [
     },
     {
       id: 6,
-      label: "Achievement 6",
-      description: "test achievement 6",
-      image: "/public/achievement.webp",
+      label: "Outstanding Student Volunteer Award",
+      description: "Aarohi Manchanda",
+      image: "https://cdn.sanity.io/images/gcb0j4e6/production/e0087b9d9490da4f699fa7e075a9e944ce230771-634x632.png",
       content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+        "Aarohi Manchanda has been recognized with the Outstanding Student Volunteer Award for her exceptional dedication to IEEE initiatives. Her proactive involvement and leadership have significantly enriched the IEEE community at MUJ.",
     },
     {
       id: 7,
-      label: "Achievement 7",
-      description: "test achievement 6",
-      image: "/public/achievement.webp",
+      label: "JK Pal Award",
+      description: "Ronak Modi",
+      image: "https://cdn.sanity.io/images/gcb0j4e6/production/7b43cf628f2396a349c9dd31ad7b0f1c75d07571-614x608.png",
       content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+        "Ronak Modi has received the JK Pal Award in recognition of his outstanding commitment to IEEE MUJ. His contributions to technical events and volunteer efforts have been instrumental in fostering a vibrant IEEE ecosystem.",
+    },
+    {
+      id: 8,
+      label: "TAC Team Lead Delhi Section",
+      description: "Vikramaditya Hiran",
+      image: "https://cdn.sanity.io/images/gcb0j4e6/production/257462e4540e0481e8bad5d124f9809a6c155b2c-623x616.png",
+      content:
+        "Vikramaditya Hiran’s dedication and contribution to IEEE have been recognized with achieving TAC Team Lead position for Delhi Section. His ability to lead and innovate has made a lasting impact, inspiring fellow students to engage and grow in the IEEE community. Congratulations, Vikramaditya!",
     },
     {
       id: 9,
-      label: "Achievement 9",
-      description: "test achievement 6",
-      image: "/public/achievement.webp",
+      label: "IEEE Exemplary Student Branch Award 2023",
+      description: "IEEE SB Won exemplary student branch award 2023",
+      image: "https://cdn.sanity.io/images/gcb0j4e6/production/425ca4b14ea6837bd9c42a56f98dda522c7c8f75-344x194.jpg",
       content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-    },
-    {
-      id: 10,
-      label: "Achievement 10",
-      description: "test achievement 6",
-      image: "/public/achievement.webp",
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+        "The IEEE Student Branch's dedication and excellence have been recognized with the IEEE Exemplary Student Branch Award 2023 in Region 10 (Asia-Pacific). Their commitment to innovation, leadership, and community engagement has set a benchmark, inspiring students to contribute and grow within IEEE. Congratulations to the entire team on this remarkable achievement!",
     },
   ];
   

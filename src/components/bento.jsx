@@ -60,9 +60,10 @@ export default function BentoGrid({ items }) {
             <img
               src={popup.image || "/placeholder.svg"}
               alt={popup.title}
-              className="w-full h-full object-cover"
+              className={`w-full h-full ${
+                popup.title === "IEEE Exemplary Student Branch Award 2023" ? "object-contain" : "object-cover"
+              }`}
             />
-
             {/* Text Overlay on Image */}
             <div className="absolute bottom-0 w-full bg-black/70 text-white p-4 md:p-6">
               <motion.h2
