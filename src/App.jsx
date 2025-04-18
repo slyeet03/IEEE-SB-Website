@@ -17,7 +17,6 @@ import AnnualReport from "./pages/AnnualReport";
 import ResponsiveGallery from "./components/ResponsiveGallery";
 import SwipeCards from "./components/SwipeCards";
 import AchievementsPage from "./pages/AchievementsPage";
-
 const Home = () => (
   <>
     <Hero />
@@ -48,6 +47,7 @@ function App() {
           <Route path="/achievements" element={<div className="pt-20"><AchievementsPage /></div>} />
         </Routes>
         <Footer />
+        
       </main>
     </Router>
   );
