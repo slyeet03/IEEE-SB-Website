@@ -23,7 +23,7 @@ const socialMediaIcons = {
 
 const Team = () => {
   const [teamData, setTeamData] = useState([]);
-  const [year, setYear] = useState("2024");
+  const [year, setYear] = useState("2025");
   const [selectedTab, setSelectedTab] = useState("Advisory");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -259,7 +259,7 @@ const Team = () => {
                 className="absolute bg-white dark:bg-gray-800 shadow-xl rounded-md w-32 mt-2 z-10"
                 role="menu"
               >
-                {["2022", "2023", "2024"].map((yr) => (
+                {["2022", "2023", "2024", "2025"].map((yr) => (
                   <motion.li
                     key={yr}
                     onClick={() => {
@@ -278,7 +278,7 @@ const Team = () => {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {["Advisory", "IEEE SB", "IEEE CS", "IEEE WIE"].map((tab) => (
+          {["Advisory", "IEEE SB", "IEEE CS", "IEEE WIE", "IEEE CIS"].map((tab) => (
             <motion.button
               key={tab}
               onClick={() => {
