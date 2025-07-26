@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { client } from "../../sanity"; // Assuming sanity client is correctly configured
 import { FiChevronDown } from "react-icons/fi";
 import imageUrlBuilder from "@sanity/image-url";
-import { FaCalendarAlt, FaUsers, FaTrophy } from "react-icons/fa";
+import { FaCalendarAlt, FaUsers, FaTrophy, FaRupeeSign } from "react-icons/fa";
 import CountUp from "react-countup";
-import { Fade, Zoom, Slide } from "react-awesome-reveal"; // Keep these for overall section animations
+import { Fade, Zoom } from "react-awesome-reveal";
+import PropTypes from "prop-types";
 
 // Sanity image builder
 const builder = imageUrlBuilder(client);
@@ -22,22 +23,22 @@ const formatSocietyName = (society) => {
     "ieee-wie": "IEEE WIE",
     "ieee-cis": "IEEE CIS",
     "ieeexacm": "IEEE X ACM",
-    "genesis": "GENESIS", // Capitalized for emphasis
+    "genesis": "GENESIS",
   };
-  return societyMap[society?.toLowerCase()] || society.replace("-", " ").toUpperCase();
+  return societyMap[society?.toLowerCase()] || society?.replace("-", " ").toUpperCase() || '';
 };
 
 const EventGrid = () => {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Default to current year
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
   const [events, setEvents] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedSociety, setSelectedSociety] = useState("");
-  const [error, setError] = useState(null); // Add error state
+  const [error, setError] = useState(null);
   const dropdownRef = useRef(null);
-  const navigate = useNavigate(); // Moved navigate here for consistent EventCard usage
+  const navigate = useNavigate();
 
-  // Fetch data with error handling
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -62,31 +63,25 @@ const EventGrid = () => {
     fetchData();
   }, [fetchData]);
 
-  // Filter events by year and sort them
   const filteredEvents = useMemo(() => {
     return events
       .filter((event) => new Date(event.startDateTime).getFullYear() === selectedYear)
       .sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
   }, [events, selectedYear]);
 
-  // Dynamically generate available years from events, up to current year + 1
   const availableYears = useMemo(() => {
     const years = new Set();
-    const currentYear = new Date().getFullYear();
     events.forEach(event => {
       const year = new Date(event.startDateTime).getFullYear();
-      if (year <= currentYear + 1 && year >= 2022) { // Assuming events start from 2022
+      if (year >= 2022) {
         years.add(year);
       }
     });
-    // Add current year and next year if not present
     years.add(currentYear);
     years.add(currentYear + 1);
-    return Array.from(years).sort((a, b) => b - a); // Sort descending for dropdown
-  }, [events]);
+    return Array.from(years).sort((a, b) => b - a);
+  }, [events, currentYear]);
 
-
-  // Extract and format unique societies that have events in the *selected year*
   const societiesInSelectedYear = useMemo(() => {
     const societies = new Set();
     filteredEvents.forEach(event => {
@@ -96,7 +91,6 @@ const EventGrid = () => {
     });
     const fixedOrder = ['ieee-sb', 'ieee-cs', 'ieee-wie'];
     let allSocieties = Array.from(societies);
-    // Extract fixed societies in order if present
     const ordered = [];
     fixedOrder.forEach(soc => {
       const idx = allSocieties.indexOf(soc);
@@ -105,27 +99,22 @@ const EventGrid = () => {
         allSocieties.splice(idx, 1);
       }
     });
-    // Sort the rest alphabetically
-    allSocieties.sort((a, b) => a.localeCompare(b));
-    // Final order: all, fixed, rest
+    allSocieties.sort((a, b) => formatSocietyName(a).localeCompare(formatSocietyName(b)));
     return ['all', ...ordered, ...allSocieties];
   }, [filteredEvents]);
 
-  // Set default selected society
   useEffect(() => {
     if (societiesInSelectedYear.length > 0) {
-      // If "all" is an option, select it, otherwise select the first available society
       if (societiesInSelectedYear.includes("all")) {
         setSelectedSociety("all");
       } else {
         setSelectedSociety(societiesInSelectedYear[0]);
       }
     } else {
-      setSelectedSociety(""); // No societies for the year
+      setSelectedSociety("");
     }
-  }, [societiesInSelectedYear, selectedYear]); // Reset when selected year changes
+  }, [societiesInSelectedYear, selectedYear]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -136,14 +125,12 @@ const EventGrid = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Filter events by selected society (if "all" is not selected)
   const finalFilteredEvents = useMemo(() => {
     if (selectedSociety === "all" || !selectedSociety) {
       return filteredEvents;
     }
     return filteredEvents.filter((event) => event.society === selectedSociety);
   }, [filteredEvents, selectedSociety]);
-
 
   return (
     <div className="bg-white dark:bg-ieee-dark py-8 px-4 sm:px-6 lg:px-8">
@@ -152,20 +139,20 @@ const EventGrid = () => {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
           {/* Year Selector */}
           <div className="flex items-center space-x-3">
-            <span className="text-lg font-semibold text-ieee-blue-DEFAULT dark:text-ieee-light">
-              Year:
+            <span className="text-lg font-semibold text-ieee-blue-DEFAULT dark:text-ieee-light whitespace-nowrap">
+              Filter by:
             </span>
             <motion.div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-ieee-blue-DEFAULT focus:ring-opacity-50"
                 aria-haspopup="true"
                 aria-expanded={dropdownOpen}
                 aria-label="Select Event Year"
               >
                 <span className="font-medium text-base">{selectedYear}</span>
                 <FiChevronDown
-                  className={`transition-transform ${
+                  className={`transition-transform duration-200 ${
                     dropdownOpen ? "rotate-180" : "rotate-0"
                   }`}
                   aria-hidden="true"
@@ -178,7 +165,7 @@ const EventGrid = () => {
                     animate={{ opacity: 1, y: 0, scaleY: 1 }}
                     exit={{ opacity: 0, y: -10, scaleY: 0.95 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute bg-white dark:bg-gray-800 shadow-xl rounded-lg w-32 mt-2 z-30 ring-1 ring-ieee-blue-light/20 dark:ring-ieee-blue-dark/20"
+                    className="absolute bg-white dark:bg-gray-800 shadow-xl rounded-lg w-32 mt-2 z-30 ring-1 ring-ieee-blue-light/20 dark:ring-ieee-blue-dark/20 max-h-60 overflow-y-auto"
                   >
                     {availableYears.map((year) => (
                       <li
@@ -197,7 +184,7 @@ const EventGrid = () => {
               </AnimatePresence>
             </motion.div>
           </div>
-          {/* Society Filter Tabs */}
+           {/* Society Filter Tabs */}
           {societiesInSelectedYear.length > 1 && (
             <Fade direction="right" triggerOnce>
               <div className="flex flex-wrap justify-center gap-2">
@@ -224,18 +211,24 @@ const EventGrid = () => {
       {/* Content Area */}
       <div className="max-w-7xl mx-auto py-6">
         {loading && (
-          <div className="flex justify-center items-center h-64">
+          <div className="flex flex-col justify-center items-center h-64">
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-              className="w-16 h-16 border-4 border-ieee-blue-DEFAULT border-t-transparent rounded-full"
+              className="w-16 h-16 border-4 border-ieee-blue-DEFAULT border-t-transparent rounded-full mb-4"
             ></motion.div>
-            <p className="ml-4 text-ieee-blue-DEFAULT dark:text-ieee-light text-lg">Loading events...</p>
+            <p className="text-ieee-blue-DEFAULT dark:text-ieee-light text-lg">Loading events...</p>
           </div>
         )}
         {error && (
           <div className="text-center text-red-500 dark:text-red-400 text-lg py-8">
             <p>{error}</p>
+            <button
+              onClick={fetchData}
+              className="mt-4 px-6 py-2 bg-ieee-blue-DEFAULT text-white rounded-lg hover:bg-ieee-blue-dark transition-colors"
+            >
+              Retry
+            </button>
           </div>
         )}
         {!loading && !error && finalFilteredEvents.length === 0 && (
@@ -253,7 +246,7 @@ const EventGrid = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
             <AnimatePresence>
               {finalFilteredEvents.map((event) => (
-                <Zoom key={event._id} triggerOnce duration={600}>
+                <Zoom key={event._id} triggerOnce duration={600} cascade damping={0.1}>
                   <EventCard event={event} navigate={navigate} />
                 </Zoom>
               ))}
@@ -274,24 +267,22 @@ const EventCard = ({ event, navigate }) => {
       eventDate < today
         ? `/events/post/${event._id}`
         : `/events/pre/${event._id}`;
-    navigate(route, { state: { event: event } }); // Pass event data via state
+    navigate(route, { state: { event: event } });
   }, [event, eventDate, navigate, today]);
 
-  const formattedDate = eventDate.toLocaleDateString("en-US", { // Changed to en-US for typical formatting
+  const formattedDate = eventDate.toLocaleDateString("en-US", {
     day: "numeric",
-    month: "short", // Abbreviated month
+    month: "short",
     year: "numeric",
   });
 
-  // Optimize image loading based on potential card size
   const optimizedImageUrl = useMemo(() => {
-    // These sizes are optimized for common card display widths
-    const width = 600; // A reasonable width for a grid card image
-    const height = 400; // A reasonable height
+    const width = 600;
+    const height = 400;
     return urlFor(event.imageUrl)
       .width(width)
       .height(height)
-      .quality(80) // Added quality optimization
+      .quality(80)
       .auto("format")
       .url();
   }, [event.imageUrl]);
@@ -300,7 +291,7 @@ const EventCard = ({ event, navigate }) => {
   return (
     <motion.div
       onClick={handleClick}
-      className="group relative w-full max-w-[380px] h-[440px] mx-auto overflow-hidden rounded-2xl shadow-xl dark:shadow-2xl cursor-pointer transition-all duration-300 ease-out hover:scale-[1.035] active:scale-[0.98] will-change-transform border border-gray-100 dark:border-gray-700/50"
+      className="group relative w-full aspect-[9/13] mx-auto overflow-hidden rounded-2xl shadow-xl dark:shadow-2xl cursor-pointer transition-all duration-300 ease-out hover:scale-[1.035] active:scale-[0.98] will-change-transform border border-gray-100 dark:border-gray-700/50"
       whileHover={{ y: -5 }}
       whileTap={{ scale: 0.98 }}
       aria-label={`Event: ${event.name}, ${formattedDate}`}
@@ -313,23 +304,26 @@ const EventCard = ({ event, navigate }) => {
       />
       {/* Gradient overlay for readability */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent z-10" />
-      {/* Content Overlay at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 p-4 flex flex-col justify-end">
-        <h3 className="text-xl sm:text-2xl font-bold uppercase tracking-wide mb-1 drop-shadow-lg leading-tight text-white">
+      {/* Content Overlay at bottom - Adjusted padding and flex for better content display */}
+      <div className="absolute bottom-0 left-0 right-0 z-20 px-4 py-3 sm:px-5 sm:py-4 flex flex-col justify-end">
+        <h3 className="text-xl sm:text-2xl font-bold uppercase tracking-wide mb-1 drop-shadow-lg leading-tight text-white line-clamp-2"> {/* Added line-clamp-2 */}
           {event.name}
         </h3>
         <div className="flex items-center space-x-3 text-gray-200 text-sm sm:text-base mb-1">
-          <FaCalendarAlt className="w-4 h-4" />
+          <FaCalendarAlt className="w-4 h-4 text-ieee-blue-light" />
           <p>{formattedDate}</p>
         </div>
         <div className="flex items-center space-x-3 text-gray-200 text-sm sm:text-base mb-1">
-          <FaUsers className="w-4 h-4" />
+          <FaUsers className="w-4 h-4 text-ieee-blue-light" />
           <p>Team Size: <CountUp end={event.teamSize || 1} duration={1.5} /></p>
         </div>
-        {event.prizePool > 0 && (
+        {(event.prizePool ?? 0) > 0 && (
           <div className="flex items-center space-x-3 text-gray-200 text-sm sm:text-base">
-            <FaTrophy className="w-4 h-4" />
-            <p>Prize Pool: <CountUp end={event.prizePool} duration={1.5} prefix="\u20b9" separator="," /></p>
+            <FaTrophy className="w-4 h-4 text-ieee-blue-light" />
+            <p>
+              Prize Pool:&nbsp;
+              <CountUp end={event.prizePool} duration={1.5} prefix="₹" separator="," />
+            </p>
           </div>
         )}
       </div>
@@ -344,6 +338,12 @@ const EventCard = ({ event, navigate }) => {
       </span>
     </motion.div>
   );
+};
+
+// PropTypes for EventCard
+EventCard.propTypes = {
+  event: PropTypes.object.isRequired,
+  navigate: PropTypes.func.isRequired,
 };
 
 export default EventGrid;
