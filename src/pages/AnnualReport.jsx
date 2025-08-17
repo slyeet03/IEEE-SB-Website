@@ -31,7 +31,6 @@ const AnnualReport = () => {
 
       setEvents(pastEvents);
 
-      // Set featured event (latest event from current year)
       const currentYearEvents = pastEvents.filter(
         (event) => new Date(event.startDateTime).getFullYear() === selectedYear
       );
@@ -64,16 +63,15 @@ const AnnualReport = () => {
     <div className="min-h-screen bg-white dark:bg-ieee-dark text-gray-900 dark:text-white">
       {/* Magazine Header */}
       <motion.div
-        className="relative w-full bg-gradient-to-r from-ieee-blue-dark via-ieee-blue to-ieee-blue-light text-white overflow-hidden"
+        className="relative w-full bg-ieee-blue-dark text-white overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <div className="absolute inset-0 bg-black opacity-30"></div>
         <div className="relative z-10 px-8 py-20">
           <div className="max-w-6xl mx-auto">
             <motion.h1
-              className="text-6xl lg:text-8xl font-bold mb-4 tracking-wider font-display"
+              className="text-6xl lg:text-8xl font-bold mb-4 tracking-wider"
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -81,7 +79,7 @@ const AnnualReport = () => {
               IEEE MUJ
             </motion.h1>
             <motion.div
-              className="text-2xl lg:text-3xl font-light mb-2 font-sans"
+              className="text-2xl lg:text-3xl font-light mb-2"
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
@@ -89,7 +87,7 @@ const AnnualReport = () => {
               ANNUAL REPORT
             </motion.div>
             <motion.div
-              className="text-lg opacity-80 font-light font-sans"
+              className="text-lg opacity-80 font-light"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.7 }}
@@ -101,15 +99,15 @@ const AnnualReport = () => {
       </motion.div>
 
       {/* Year Selector */}
-      <div className="sticky top-0 z-30 bg-white dark:bg-ieee-dark border-b border-ieee-blue/20 py-4 shadow-sm">
+      <div className="sticky top-14 z-30 bg-white/80 dark:bg-ieee-dark/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700/50 py-4 shadow-sm">
         <div className="max-w-6xl mx-auto px-8 flex justify-between items-center">
-          <div className="text-sm font-semibold tracking-wide uppercase text-ieee-blue dark:text-ieee-light">
+          <div className="text-sm font-semibold tracking-wide uppercase text-gray-500 dark:text-gray-400">
             Year in Focus
           </div>
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen((prev) => !prev)}
-              className="flex items-center gap-2 px-6 py-2 bg-ieee-blue text-white rounded-full shadow-md hover:bg-ieee-blue-dark transition-all font-semibold"
+              className="flex items-center gap-2 px-6 py-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full shadow-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-all font-semibold"
             >
               <span className="text-lg">{selectedYear}</span>
               <FiChevronDown
@@ -121,24 +119,12 @@ const AnnualReport = () => {
 
             <AnimatePresence>
               {dropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/20 z-40"
-                  onClick={() => setDropdownOpen(false)}
-                />
-              )}
-            </AnimatePresence>
-
-            <AnimatePresence>
-              {dropdownOpen && (
                 <motion.ul
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute mt-2 w-full bg-white dark:bg-ieee-dark rounded-lg shadow-xl z-50 border border-ieee-blue/20 overflow-hidden"
+                  className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-xl z-50 border border-gray-200 dark:border-gray-700 overflow-hidden"
                 >
                   {Object.keys(groupedEvents)
                     .sort((a, b) => b - a)
@@ -149,7 +135,7 @@ const AnnualReport = () => {
                           setSelectedYear(Number(year));
                           setDropdownOpen(false);
                         }}
-                        className="px-6 py-3 hover:bg-ieee-blue/10 dark:hover:bg-ieee-blue/20 cursor-pointer transition-all font-semibold"
+                        className="px-6 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-all font-semibold"
                         whileHover={{ scale: 1.02 }}
                       >
                         {year}
@@ -174,7 +160,7 @@ const AnnualReport = () => {
             Featured Story
           </div>
           <div
-            className="relative bg-gray-100 dark:bg-ieee-dark-blue rounded-2xl overflow-hidden cursor-pointer group"
+            className="relative bg-gray-50 dark:bg-gray-800/50 rounded-2xl overflow-hidden cursor-pointer group"
             onClick={() => navigate(`/events/post/${featuredEvent._id}`)}
           >
             <div className="grid lg:grid-cols-2 gap-0">
@@ -230,49 +216,61 @@ const AnnualReport = () => {
       {/* Magazine Grid Layout */}
       <div className="max-w-6xl mx-auto px-8 py-12">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold">Events & Activities</h2>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Events & Activities
+          </h2>
           <div className="text-sm text-gray-500 dark:text-gray-400">
             {groupedEvents[selectedYear]?.length || 0} events in {selectedYear}
           </div>
         </div>
 
         {groupedEvents[selectedYear]?.length > 0 ? (
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid gap-8">
             {groupedEvents[selectedYear].map((event, index) => (
               <motion.div
                 key={event._id}
-                className="group cursor-pointer"
+                className={`grid md:grid-cols-2 gap-6 items-center ${
+                  index % 2 === 1 ? "md:grid-flow-col-dense" : ""
+                }`}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                onClick={() => navigate(`/events/post/${event._id}`)}
               >
                 <motion.div
-                  className="relative h-64 overflow-hidden rounded-xl mb-4"
-                  whileHover={{ scale: 1.03 }}
+                  className={`relative h-64 overflow-hidden rounded-xl cursor-pointer ${
+                    index % 2 === 1 ? "md:col-start-2" : ""
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  onClick={() => navigate(`/events/post/${event._id}`)}
                 >
                   {event.posterUrl ? (
                     <img
                       src={event.posterUrl}
                       alt={event.name}
-                      className="w-full h-full object-cover transition-transform group-hover:scale-110 duration-300"
+                      className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-ieee-blue to-ieee-blue-dark flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-ieee-blue to-purple-600 flex items-center justify-center">
                       <FiUsers className="w-16 h-16 text-white opacity-50" />
                     </div>
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </motion.div>
-
-                <div className="space-y-2">
+                <div
+                  className={`space-y-4 ${
+                    index % 2 === 1 ? "md:col-start-1 md:row-start-1" : ""
+                  }`}
+                >
                   <div className="text-xs font-semibold tracking-wide uppercase text-ieee-blue dark:text-ieee-light">
                     {event.society ? event.society.toUpperCase() : "IEEE MUJ"}
                   </div>
-                  <h3 className="text-2xl font-bold group-hover:text-ieee-blue dark:group-hover:text-ieee-light transition-colors">
+                  <h3
+                    className="text-2xl font-bold text-gray-900 dark:text-white cursor-pointer hover:text-ieee-blue dark:hover:text-ieee-light transition-colors"
+                    onClick={() => navigate(`/events/post/${event._id}`)}
+                  >
                     {event.name}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     {event.description && event.description.length > 150
                       ? `${event.description.substring(0, 150)}...`
                       : event.description ||
@@ -297,7 +295,9 @@ const AnnualReport = () => {
             animate={{ opacity: 1 }}
           >
             <div className="text-6xl mb-4">📅</div>
-            <h3 className="text-2xl font-bold mb-2">No Events This Year</h3>
+            <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
+              No Events This Year
+            </h3>
             <p className="text-gray-500 dark:text-gray-400">
               Check back later or explore other years.
             </p>
@@ -306,9 +306,11 @@ const AnnualReport = () => {
       </div>
 
       {/* Magazine Footer */}
-      <div className="bg-gray-100 dark:bg-ieee-dark-blue mt-20">
+      <div className="bg-gray-100 dark:bg-gray-800/20 mt-20">
         <div className="max-w-6xl mx-auto px-8 py-12 text-center">
-          <h3 className="text-2xl font-bold mb-4">IEEE MUJ Student Branch</h3>
+          <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+            IEEE MUJ Student Branch
+          </h3>
           <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             Empowering students through technology, innovation, and professional
             development. Join us in shaping the future of engineering and
