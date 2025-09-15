@@ -3,10 +3,11 @@ import { motion } from 'framer-motion';
 import { client } from "../../sanity";
 import { Container } from '../components/Container';
 import { FadeIn, FadeInStagger } from '../components/FadeIn';
-import { FaLinkedin, FaGraduationCap, FaEnvelope, FaMapMarkerAlt, FaUser, FaExternalLinkAlt } from 'react-icons/fa';
 import { SiGooglescholar } from 'react-icons/si';
 import imageUrlBuilder from '@sanity/image-url';
 import Modal from 'react-modal'; 
+import { FaLinkedin, FaGraduationCap, FaEnvelope, FaMapMarkerAlt, FaUser, FaExternalLinkAlt, FaTimes, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+
 
 Modal.setAppElement('#root');
 
@@ -200,58 +201,123 @@ const Faculty = () => {
         <Modal
           isOpen={!!modalFaculty}
           onRequestClose={() => setModalFaculty(null)}
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg mx-auto my-20 p-6 outline-none"
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl mx-auto my-12 p-8 outline-none relative"
           overlayClassName="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
         >
-          <div className="flex flex-col items-center text-center">
+          {/* Close button (X in corner) */}
+          <button
+            onClick={() => setModalFaculty(null)}
+            className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition"
+          >
+            <FaTimes size={18} />
+          </button>
+
+          {/* Modal Content */}
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+            {/* Profile Photo */}
             {modalFaculty.photo ? (
               <img
                 src={urlFor(modalFaculty.photo)}
                 alt={modalFaculty.name}
-                className="w-32 h-32 rounded-full object-cover mb-4"
+                className="w-40 h-40 rounded-full object-cover"
               />
             ) : (
-              <div className="w-32 h-32 rounded-full bg-ieee-blue flex items-center justify-center mb-4">
-                <FaUser className="text-4xl text-white opacity-70" />
+              <div className="w-40 h-40 rounded-full bg-ieee-blue flex items-center justify-center">
+                <FaUser className="text-5xl text-white opacity-70" />
               </div>
             )}
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">{modalFaculty.name}</h2>
-            <p className="text-ieee-blue font-medium">{modalFaculty.designation}</p>
-            <p className="text-gray-600 dark:text-gray-400">{modalFaculty.department}</p>
-            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-              {modalFaculty.educationalQualifications}
-            </p>
-            {modalFaculty.notableWorks && (
-              <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-                <strong>Notable Work:</strong> {modalFaculty.notableWorks}
-              </p>
-            )}
-            {/* Links */}
-            <div className="flex gap-4 mt-4">
-              {modalFaculty.linkedinUrl && (
-                <a href={modalFaculty.linkedinUrl} target="_blank" rel="noopener noreferrer">
-                  <FaLinkedin className="text-xl text-blue-600 hover:scale-110 transition" />
-                </a>
+
+            {/* Detailed Info */}
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{modalFaculty.name}</h2>
+              <p className="text-ieee-blue font-medium text-lg">{modalFaculty.designation}</p>
+              <p className="text-gray-600 dark:text-gray-400 mb-3">{modalFaculty.department}</p>
+
+              {/* Qualifications */}
+              {modalFaculty.educationalQualifications && (
+                <div className="mb-3">
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">Educational Qualifications</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    {modalFaculty.educationalQualifications}
+                  </p>
+                </div>
               )}
-              {modalFaculty.googleScholarUrl && (
-                <a href={modalFaculty.googleScholarUrl} target="_blank" rel="noopener noreferrer">
-                  <SiGooglescholar className="text-xl text-gray-700 dark:text-gray-200 hover:scale-110 transition" />
-                </a>
+
+              {/* Notable Works */}
+              {modalFaculty.notableWorks && (
+                <div className="mb-3">
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">Notable Works</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    {modalFaculty.notableWorks}
+                  </p>
+                </div>
               )}
+
+              {/* Contact Info */}
               {modalFaculty.email && (
-                <a href={`mailto:${modalFaculty.email}`}>
-                  <FaEnvelope className="text-xl text-red-500 hover:scale-110 transition" />
-                </a>
+                <div className="mb-3">
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200">Contact</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 flex items-center gap-2">
+                    <FaEnvelope className="text-red-500" /> {modalFaculty.email}
+                  </p>
+                </div>
               )}
+
+              {/* External Links */}
+              <div className="flex gap-4 mt-4 justify-center md:justify-start">
+                {modalFaculty.linkedinUrl && (
+                  <a
+                    href={modalFaculty.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-blue-600 hover:underline"
+                  >
+                    <FaLinkedin /> LinkedIn
+                  </a>
+                )}
+                {modalFaculty.googleScholarUrl && (
+                  <a
+                    href={modalFaculty.googleScholarUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:underline"
+                  >
+                    <SiGooglescholar /> Google Scholar
+                  </a>
+                )}
+              </div>
             </div>
-            <button
-              onClick={() => setModalFaculty(null)}
-              className="mt-6 px-6 py-2 bg-ieee-blue text-white rounded-lg hover:bg-ieee-blue-dark transition-colors"
-            >
-              Close
-            </button>
           </div>
         </Modal>
+      )}
+
+      {/* Navigation Arrows (outside modal, floating) */}
+      {modalFaculty && (
+        <>
+          {/* Left Arrow */}
+          <button
+            onClick={() => {
+              const currentIndex = filteredFaculty.indexOf(modalFaculty);
+              const prevIndex = (currentIndex - 1 + filteredFaculty.length) % filteredFaculty.length;
+              setModalFaculty(filteredFaculty[prevIndex]);
+            }}
+            className="fixed left-6 top-1/2 -translate-y-1/2 bg-white dark:bg-gray-700 rounded-full shadow-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition z-50"
+          >
+            <FaChevronLeft size={22} className="text-gray-700 dark:text-white" />
+          </button>
+
+          {/* Right Arrow */}
+          <button
+            onClick={() => {
+              const currentIndex = filteredFaculty.indexOf(modalFaculty);
+              const nextIndex = (currentIndex + 1) % filteredFaculty.length;
+              setModalFaculty(filteredFaculty[nextIndex]);
+            }}
+            className="fixed right-6 top-1/2 -translate-y-1/2 bg-white dark:bg-gray-700 rounded-full shadow-lg p-3 hover:bg-gray-100 dark:hover:bg-gray-600 transition z-50"
+          >
+            <FaChevronRight size={22} className="text-gray-700 dark:text-white" />
+          </button>
+        </>
       )}
     </div>
   );
